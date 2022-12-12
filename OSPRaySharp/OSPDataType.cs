@@ -3,133 +3,131 @@ using System.Runtime.CompilerServices;
 
 namespace OSPRay
 {
-    internal enum OSPDataType
+    public enum OSPDataType
     {
         // Object reference type.
-        OSP_DEVICE = 100,
+        Device = 100,
 
         // Void pointer type.
-        OSP_VOID_PTR = 200,
+        Pointer = 200,
 
         // Booleans, same size as OSP_INT.
-        OSP_BOOL = 250,
+        Bool = 250,
 
         // highest bit to represent objects/handles
-        OSP_OBJECT = 0x8000000,
+        Object = 0x8000000,
 
         // object subtypes
-        OSP_DATA = 0x8000000 + 100,
-        OSP_CAMERA,
-        OSP_FRAMEBUFFER,
-        OSP_FUTURE,
-        OSP_GEOMETRIC_MODEL,
-        OSP_GEOMETRY,
-        OSP_GROUP,
-        OSP_IMAGE_OPERATION,
-        OSP_INSTANCE,
-        OSP_LIGHT,
-        OSP_MATERIAL,
-        OSP_RENDERER,
-        OSP_TEXTURE,
-        OSP_TRANSFER_FUNCTION,
-        OSP_VOLUME,
-        OSP_VOLUMETRIC_MODEL,
-        OSP_WORLD,
+        Data = 0x8000000 + 100,
+        Camera,
+        FrameBuffer,
+        Future,
+        GeometricModel,
+        Geometry,
+        Group,
+        ImageOperation,
+        Instance,
+        Light,
+        Material,
+        Renderer,
+        Texture,
+        TransferFunction,
+        Volume,
+        VolumetricModel,
+        World,
 
         // Pointer to a C-style NULL-terminated character string.
-        OSP_STRING = 1500,
+        String = 1500,
 
         // Character scalar type.
-        OSP_CHAR = 2000,
-        OSP_VEC2C,
-        OSP_VEC3C,
-        OSP_VEC4C,
+        Char = 2000,
+        Vec2C,
+        Vec3C,
+        Vec4C,
 
         // Unsigned character scalar and vector types.
-        OSP_UCHAR = 2500,
-        OSP_VEC2UC,
-        OSP_VEC3UC,
-        OSP_VEC4UC,
-        OSP_BYTE = 2500, // XXX OSP_UCHAR, ISPC issue #1246
-        OSP_RAW = 2500, // XXX OSP_UCHAR, ISPC issue #1246
+        UChar = 2500,
+        Vec2UC,
+        Vec3UC,
+        Vec4UC,
+        Byte = 2500, // XXX OSP_UCHAR, ISPC issue #1246
+        Raw = 2500, // XXX OSP_UCHAR, ISPC issue #1246
 
         // Signed 16-bit integer scalar.
-        OSP_SHORT = 3000,
-        OSP_VEC2S,
-        OSP_VEC3S,
-        OSP_VEC4S,
+        Short = 3000,
+        Vec2S,
+        Vec3S,
+        Vec4S,
 
         // Unsigned 16-bit integer scalar.
-        OSP_USHORT = 3500,
-        OSP_VEC2US,
-        OSP_VEC3US,
-        OSP_VEC4US,
+        UShort = 3500,
+        Vec3US,
+        Vec2US,
+        Vec4US,
 
         // Signed 32-bit integer scalar and vector types.
-        OSP_INT = 4000,
-        OSP_VEC2I,
-        OSP_VEC3I,
-        OSP_VEC4I,
+        Int = 4000,
+        Vec2I,
+        Vec3I,
+        Vec4I,
 
         // Unsigned 32-bit integer scalar and vector types.
-        OSP_UINT = 4500,
-        OSP_VEC2UI,
-        OSP_VEC3UI,
-        OSP_VEC4UI,
+        UInt = 4500,
+        Vec2UI,
+        Vec3UI,
+        Vec4UI,
 
         // Signed 64-bit integer scalar and vector types.
-        OSP_LONG = 5000,
-        OSP_VEC2L,
-        OSP_VEC3L,
-        OSP_VEC4L,
+        Long = 5000,
+        Vec2L,
+        Vec3L,
+        Vec4L,
 
         // Unsigned 64-bit integer scalar and vector types.
-        OSP_ULONG = 5550,
-        OSP_VEC2UL,
-        OSP_VEC3UL,
-        OSP_VEC4UL,
+        ULong = 5550,
+        Vec2UL,
+        Vec3UL,
+        Vec4UL,
 
         // Half precision floating point scalar and vector types (IEEE 754
         // `binary16`).
-        OSP_HALF = 5800,
-        OSP_VEC2H,
-        OSP_VEC3H,
-        OSP_VEC4H,
+        Half = 5800,
+        Vec2H,
+        Vec3H,
+        Vec4H,
 
         // Single precision floating point scalar and vector types.
-        OSP_FLOAT = 6000,
-        OSP_VEC2F,
-        OSP_VEC3F,
-        OSP_VEC4F,
+        Float = 6000,
+        Vec2F,
+        Vec3F,
+        Vec4F,
 
         // Double precision floating point scalar type.
-        OSP_DOUBLE = 7000,
-        OSP_VEC2D,
-        OSP_VEC3D,
-        OSP_VEC4D,
+        Double = 7000,
+        Vec2D,
+        Vec3D,
+        Vec4D,
 
         // Signed 32-bit integer N-dimensional box types
-        OSP_BOX1I = 8000,
-        OSP_BOX2I,
-        OSP_BOX3I,
-        OSP_BOX4I,
+        Box1I = 8000,
+        Box2I,
+        Box3I,
+        Box4I,
 
         // Single precision floating point N-dimensional box types
-        OSP_BOX1F = 10000,
-        OSP_BOX2F,
-        OSP_BOX3F,
-        OSP_BOX4F,
+        Box1F = 10000,
+        Box2F,
+        Box3F,
+        Box4F,
 
         // Transformation types
-        OSP_LINEAR2F = 12000,
-        OSP_LINEAR3F,
-        OSP_AFFINE2F,
-        OSP_AFFINE3F,
+        Linear2F = 12000,
+        Linear3F,
+        Affine2F,
+        Affine3F,
 
-        OSP_QUATF,
-
-        // Guard value.
-        OSP_UNKNOWN = 9999999
+        QuatF,
+        Unknown = 9999999
     }
 
     internal static class OSPDataTypeUtil
@@ -138,83 +136,83 @@ namespace OSPRay
         internal static OSPDataType GetDataType<T>() 
         {
             if (typeof(T) == typeof(bool))
-                return OSPDataType.OSP_BOOL;
+                return OSPDataType.Bool;
 
             if (typeof(T) == typeof(sbyte))
-                return OSPDataType.OSP_CHAR;
+                return OSPDataType.Char;
 
             if (typeof(T) == typeof(byte))
-                return OSPDataType.OSP_UCHAR;
+                return OSPDataType.UChar;
 
             if (typeof(T) == typeof(short))
-                return OSPDataType.OSP_SHORT;
+                return OSPDataType.Short;
 
             if (typeof(T) == typeof(ushort))
-                return OSPDataType.OSP_USHORT;
+                return OSPDataType.UShort;
 
             if (typeof(T) == typeof(int))
-                return OSPDataType.OSP_INT;
+                return OSPDataType.Int;
 
             if (typeof(T) == typeof(uint))
-                return OSPDataType.OSP_UINT;
+                return OSPDataType.UInt;
 
             if (typeof(T) == typeof(float))
-                return OSPDataType.OSP_FLOAT;
+                return OSPDataType.Float;
 
             if (typeof(T) == typeof(double))
-                return OSPDataType.OSP_DOUBLE;
+                return OSPDataType.Double;
 
             if (typeof(T) == typeof(Vector2))
-                return OSPDataType.OSP_VEC2F;
+                return OSPDataType.Vec2F;
 
             if (typeof(T) == typeof(Vector3))
-                return OSPDataType.OSP_VEC3F;
+                return OSPDataType.Vec3F;
 
             if (typeof(T) == typeof(Vector4))
-                return OSPDataType.OSP_VEC4F;
+                return OSPDataType.Vec4F;
 
 
             if (typeof(T).IsEnum)
-                return OSPDataType.OSP_INT;
+                return OSPDataType.Int;
 
 
             if (typeof(T) == typeof(OSPData<>))
-                return OSPDataType.OSP_DATA;
+                return OSPDataType.Data;
 
             if (typeof(T) == typeof(OSPImageOperation) || typeof(T).IsSubclassOf(typeof(OSPImageOperation)))
-                return OSPDataType.OSP_IMAGE_OPERATION;
+                return OSPDataType.ImageOperation;
 
             if (typeof(T) == typeof(OSPCamera) || typeof(T).IsSubclassOf(typeof(OSPCamera)))
-                return OSPDataType.OSP_CAMERA;
+                return OSPDataType.Camera;
 
             if (typeof(T) == typeof(OSPRenderer) || typeof(T).IsSubclassOf(typeof(OSPRenderer)))
-                return OSPDataType.OSP_RENDERER;
+                return OSPDataType.Renderer;
 
             if (typeof(T) == typeof(OSPLight) || typeof(T).IsSubclassOf(typeof(OSPLight)))
-                return OSPDataType.OSP_LIGHT;
+                return OSPDataType.Light;
 
             if (typeof(T) == typeof(OSPGeometry) || typeof(T).IsSubclassOf(typeof(OSPGeometry)))
-                return OSPDataType.OSP_GEOMETRY;
+                return OSPDataType.Geometry;
 
             if (typeof(T) == typeof(OSPGeometricModel) || typeof(T).IsSubclassOf(typeof(OSPGeometricModel)))
-                return OSPDataType.OSP_GEOMETRIC_MODEL;
+                return OSPDataType.GeometricModel;
 
             if (typeof(T) == typeof(OSPMaterial) || typeof(T).IsSubclassOf(typeof(OSPMaterial)))
-                return OSPDataType.OSP_MATERIAL;
+                return OSPDataType.Material;
 
 
             if (typeof(T).IsSubclassOf(typeof(OSPObject)))
-                return OSPDataType.OSP_OBJECT;
+                return OSPDataType.Object;
 
-            return OSPDataType.OSP_UNKNOWN;
+            return OSPDataType.Unknown;
         }
 
         internal static OSPDataType GetDataTypeOrThrow<T>()
         {
             var dataType = OSPDataTypeUtil.GetDataType<T>();
-            if (dataType == OSPDataType.OSP_UNKNOWN)
+            if (dataType == OSPDataType.Unknown)
             {
-                throw new ArgumentException("Unsupported parameter type.");
+                throw new ArgumentException("Unsupported parameter type. Please use specify the data type explicitly.");
             }
             return dataType;
         }

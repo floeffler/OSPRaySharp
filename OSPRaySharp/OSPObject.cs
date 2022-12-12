@@ -18,11 +18,20 @@ namespace OSPRay
         public static readonly OSPObjectHandle Empty = new OSPObjectHandle();
     }
 
+    /// <summary>
+    /// Base class for all OSPRay objects
+    /// </summary>
     public abstract class OSPObject : IDisposable
     {
         internal abstract OSPObjectHandle Handle { get; }
 
        
+        /// <summary>
+        /// Sets a single value parameter by name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterId"></param>
+        /// <param name="parameterValue"></param>
         public void SetParam<T>(string parameterId, T parameterValue) where T : unmanaged
         {
             OSPDataType dataType = OSPDataTypeUtil.GetDataTypeOrThrow<T>();
@@ -33,7 +42,25 @@ namespace OSPRay
             OSPDevice.CheckLastDeviceError();
         }
 
-        internal unsafe void SetParam<T>(string parameterId, OSPDataType dataType, params T[] values) where T : unmanaged
+        /// <summary>
+        /// Sets a string parameter
+        /// </summary>
+        /// <param name="parameterId"></param>
+        /// <param name="parameterValue"></param>
+        public void SetParam(string parameterId, string parameterValue)
+        {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(parameterValue + "\0");
+            SetParam(parameterId, OSPDataType.String, bytes);
+        }
+
+        /// <summary>
+        /// Sets a tuple parameter with explicit data type i.e Vec2F, Box1F...
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterId"></param>
+        /// <param name="dataType"></param>
+        /// <param name="values"></param>
+        public unsafe void SetParam<T>(string parameterId, OSPDataType dataType, params T[] values) where T : unmanaged
         {
             
             fixed (T* pValues = values)
@@ -43,6 +70,12 @@ namespace OSPRay
             OSPDevice.CheckLastDeviceError();
         }
 
+        /// <summary>
+        /// Sets an array parameter as data object of a specific type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameterId"></param>
+        /// <param name="parameterValues"></param>
         public void SetArrayParam<T>(string parameterId, T[]? parameterValues) where T : unmanaged
         {
             if (parameterValues != null)

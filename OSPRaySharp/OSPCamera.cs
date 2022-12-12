@@ -44,7 +44,7 @@ namespace OSPRay
 
 
         public void SetShutterType(OSPShutterType shutterType) => SetParam("shutterType", shutterType);
-        public void SetShutter(float shutterOpen, float shutterClose) => SetParam("shutter", OSPDataType.OSP_BOX1F, shutterOpen, shutterClose);
+        public void SetShutter(float shutterOpen, float shutterClose) => SetParam("shutter", OSPDataType.Box1F, shutterOpen, shutterClose);
         public void SetRollingShutterDurationr(float rollingShutterDuration) => SetParam("rollingShutterDuration", rollingShutterDuration);
 
         internal override OSPObjectHandle Handle => handle;

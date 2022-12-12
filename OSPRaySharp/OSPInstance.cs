@@ -25,7 +25,7 @@ namespace OSPRay
 
         public void SetGroup(OSPGroup group) => SetObjectParam("group", group);
         public void SetId(uint id) => SetParam("id", id);
-        public unsafe void SetTime(float startTime, float endTime) => SetParam("time", OSPDataType.OSP_BOX1F, startTime, endTime);
+        public unsafe void SetTime(float startTime, float endTime) => SetParam("time", OSPDataType.Box1F, startTime, endTime);
 
 
         internal override OSPObjectHandle Handle => handle;
