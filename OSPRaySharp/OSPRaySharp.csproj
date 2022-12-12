@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<RootNamespace>OSPRay</RootNamespace>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_ispc.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_denoiser.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_denoiser.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\OpenImageDenoise.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\openvkl.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\openvkl_module_cpu_device.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\openvkl_module_cpu_device_4.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\openvkl_module_cpu_device_8.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\openvkl_module_cpu_device_16.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\rkcommon.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\embree3.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\tbb12.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\tbbmalloc.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\vcruntime140.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\msvcp140.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	</ItemGroup>
+</Project>
