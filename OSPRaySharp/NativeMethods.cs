@@ -167,7 +167,6 @@ namespace OSPRay
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern OSPGroupHandle ospNewGroup();
 
-
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern OSPInstanceHandle ospNewInstance(OSPGroupHandle group);
     }

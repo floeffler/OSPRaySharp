@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Numerics;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +94,15 @@ namespace OSPRay
             OSPDevice.CheckLastDeviceError();
         }
 
+        public void SetObjectParam(string parameterId, OSPDataType dataType, OSPObject? parameterValue)
+        {
+            IntPtr value = parameterValue != null ? parameterValue.Handle.DangerousGetHandle() : IntPtr.Zero;
+            unsafe
+            {
+                NativeMethods.ospSetParam(Handle, parameterId, dataType, &value);
+            }
+        }
+
         /// <summary>
         /// Sets an object parameter. The functions gets the native OSPRay object handle and pass it as parameter.
         /// </summary>
@@ -101,11 +112,7 @@ namespace OSPRay
         public void SetObjectParam<T>(string parameterId, T? parameterValue) where T : OSPObject
         {
             OSPDataType dataType = OSPDataTypeUtil.GetDataTypeOrThrow<T>();
-            IntPtr value = parameterValue != null ? parameterValue.Handle.DangerousGetHandle() : IntPtr.Zero;
-            unsafe
-            {
-                NativeMethods.ospSetParam(Handle, parameterId, dataType, &value);
-            }
+            SetObjectParam(parameterId, dataType, parameterValue);
         }
 
         /// <summary>

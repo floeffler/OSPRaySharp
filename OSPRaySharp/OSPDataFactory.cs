@@ -9,6 +9,8 @@ namespace OSPRay
 {
     public static class OSPDataFactory
     {
+        public static OSPData<T> CreateArray<T>(T[] data, OSPDataType dataType, int length) where T : unmanaged => CreateData3D(new ReadOnlySpan<T>(data), dataType, length, 1, 1);
+        
         public unsafe static OSPData<IntPtr> CreateObjectArray<T>(T[] objects) where T : OSPObject
         {
             // get type and handles
@@ -28,6 +30,8 @@ namespace OSPRay
             return dataObject;
         }
 
+        
+
 
         public static OSPData<T> CreateData1D<T>(T[] data) where T : unmanaged => CreateData3D<T>(new ReadOnlySpan<T>(data), data.Length, 1, 1);
         public static OSPData<T> CreateData1D<T>(ReadOnlySpan<T> data) where T : unmanaged => CreateData3D<T>(data, data.Length, 1, 1);
@@ -38,12 +42,17 @@ namespace OSPRay
         public static OSPData<T> CreateData3D<T>(T[] data, int width, int height, int depth) where T : unmanaged => CreateData3D<T>(new ReadOnlySpan<T>(data), width, height, depth);
         public static OSPData<T> CreateData3D<T>(ReadOnlySpan<T> data, int width, int height, int depth) where T : unmanaged
         {
+            var dataType = OSPDataTypeUtil.GetDataTypeOrThrow<T>();
+            return CreateData3D(data, dataType, width, height, depth);
+        }
+
+        public static OSPData<T> CreateData3D<T>(ReadOnlySpan<T> data, OSPDataType dataType, int width, int height, int depth) where T : unmanaged
+        {
             long totalSize = width * height * depth;
             if (data.Length < totalSize)
                 throw new ArgumentException("The total number of elements exceeds the provided data span.");
 
-            var dataType = OSPDataTypeUtil.GetDataTypeOrThrow<T>();
-            var dataObject = new OSPData<T>(width, height, depth);
+            var dataObject = new OSPData<T>(dataType, width, height, depth);
             unsafe
             {
                 fixed (void* dataPointer = data)

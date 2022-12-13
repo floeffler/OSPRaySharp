@@ -1,7 +1,12 @@
 using OSPRay;
 using OSPRay.Cameras;
+using OSPRay.Geometries;
+using OSPRay.Lights;
 using OSPRay.Renderers;
+using System;
+using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace OSPRaySharp.Tests
 {
@@ -147,7 +152,7 @@ namespace OSPRaySharp.Tests
                     {
                         using (var frameBuffer = new OSPFrameBuffer(200, 200, OSPFrameBufferFormat.RGBA32F))
                         {
-                            using (var renderer = new OSPSciVisRenderer()) 
+                            using (var renderer = new OSPSciVisRenderer())
                             {
                                 renderer.SetBackgroundColor(new Vector4(0.5f, 0.5f, 0.5f, 1f));
                                 renderer.Commit();
@@ -175,6 +180,121 @@ namespace OSPRaySharp.Tests
                             }
                         }
                     }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void HelloWorld()
+        {
+            const int ImageSizeX = 1024;
+            const int ImageSizeY = 768;
+
+            var camPos  = new Vector3(0.0f, 0.0f, 0.0f);
+            var camUp   = new Vector3(0.0f, 1.0f, 0.0f);
+            var camView = new Vector3(0.1f, 0.0f, 1.0f);
+
+            // triangle mesh data
+            var vertices = new Vector3[] {
+                new Vector3(-1.0f, -1.0f, 3.0f),
+                new Vector3(-1.0f,  1.0f, 3.0f),
+                new Vector3( 1.0f, -1.0f, 3.0f),
+                new Vector3( 0.1f,  0.1f, 0.3f) 
+            };
+
+            var colors = new Vector4[] {
+                new Vector4(0.9f, 0.5f, 0.5f, 1.0f),
+                new Vector4(0.8f, 0.8f, 0.8f, 1.0f),
+                new Vector4(0.8f, 0.8f, 0.8f, 1.0f),
+                new Vector4(0.5f, 0.9f, 0.5f, 1.0f)
+            };
+
+            // triangle faces
+            var indices = new int[] {0, 1, 2, 1, 2, 3 };
+
+
+            using (var ospray = new OSPLibrary())
+            {
+                using var camera = new OSPPerspectiveCamera();
+                camera.SetAspect(ImageSizeX / (float)ImageSizeY);
+                camera.SetPosition(camPos);
+                camera.SetUp(camUp);
+                camera.SetDirection(camView);
+                camera.Commit();
+
+                using var mesh = new OSPMeshGeometry();
+                mesh.SetVertexPositions(vertices);
+                mesh.SetVertexColors(colors);
+                mesh.SetIndices(indices);
+                mesh.Commit();
+
+                using var model = new OSPGeometricModel(mesh);
+                model.Commit();
+
+                using var group = new OSPGroup();
+                group.SetGeometry(model);
+                group.Commit();
+
+                using var instance = new OSPInstance(group);
+                instance.Commit();
+
+
+                using var light = new OSPAmbientLight();
+                light.Commit();
+
+
+                using var world = new OSPWorld();
+                world.SetInstances(instance);
+                world.SetLights(light);
+                world.Commit();
+
+                using var renderer = new OSPSciVisRenderer();
+                renderer.SetPixelFilter(OSPPixelFilter.Gaussian);
+                renderer.SetBackgroundColor(1f);
+                renderer.SetAOSamples(1);
+                renderer.Commit();
+
+
+                using var frameBuffer = new OSPFrameBuffer(ImageSizeX, ImageSizeY, OSPFrameBufferFormat.SRGBA);
+
+
+                renderer.ospRenderFrameBlocking(frameBuffer, camera, world);
+                ExportFrameBuffer("firstFrame.png", frameBuffer);
+
+                for (int i = 0; i < 10; ++i)
+                {
+                    renderer.ospRenderFrameBlocking(frameBuffer, camera, world);
+                }
+
+                ExportFrameBuffer("finalFrame.png", frameBuffer);
+            }
+        }
+
+        private static void ExportFrameBuffer(string filename, OSPFrameBuffer frameBuffer)
+        {
+            using (var mappedColorBuffer = frameBuffer.Map(OSPFrameBufferChannel.Color))
+            {
+                using (var bitmap = new Bitmap(frameBuffer.Width, frameBuffer.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+                {
+                    var bitmapData = bitmap.LockBits(
+                        new Rectangle(0, 0, frameBuffer.Width, frameBuffer.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                    for (int i = 0; i < frameBuffer.Height; i++)
+                    {
+
+                        var row = mappedColorBuffer.GetSpan<int>().Slice(i * frameBuffer.Width, frameBuffer.Width);
+                        var dstPtr = bitmapData.Scan0 + bitmapData.Stride * i;
+                        unsafe
+                        {
+                            var dst = new Span<int>(dstPtr.ToPointer(), frameBuffer.Width);
+                            row.CopyTo(dst);
+                        }
+                    }
+
+                    bitmap.UnlockBits(bitmapData);
+                    bitmap.Save(filename);
                 }
             }
         }

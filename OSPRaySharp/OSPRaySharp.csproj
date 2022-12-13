@@ -13,10 +13,7 @@
 		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_ispc.dll">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_denoiser.dll">
+		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_cpu.dll">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="C:\Program Files\Intel\OSPRay v2\bin\ospray_module_denoiser.dll">
@@ -62,9 +59,5 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
 	</ItemGroup>
 </Project>

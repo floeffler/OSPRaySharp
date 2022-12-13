@@ -19,13 +19,17 @@ namespace OSPRay
         private ReadOnlyMemory<T>? sharedMemory;
         private MemoryHandle? sharedMemoryHandle;
 
-        internal OSPData(OSPDataType type, int length)
+        public OSPData(OSPDataType type, int length): this(type, length, 1, 1)
         {
-            NumItems1 = length;
-            NumItems2 = 1;
-            NumItems3 = 1;
+        }
 
-            handle = NativeMethods.ospNewData(type, length, 1, 1);
+        public OSPData(OSPDataType type, int width, int height, int depth)
+        {
+            NumItems1 = width;
+            NumItems2 = height;
+            NumItems3 = depth;
+
+            handle = NativeMethods.ospNewData(type, width, height, depth);
             if (handle.IsInvalid)
             {
                 OSPDevice.ThrowLastError();

@@ -21,6 +21,12 @@ namespace OSPRay
                 OSPDevice.ThrowLastError();
         }
 
+        public void SetInstances(params OSPInstance[] instances) => SetObjectArrayParam("instance", instances);
+        public void SetLights(params OSPLight[] lights) => SetObjectArrayParam("light", lights);
+        public void SetDynamicScene(bool dynamicScene) => SetParam("dynamicScene", dynamicScene);
+        public void SetCompactMode(bool compactMode) => SetParam("compactMode", compactMode);
+        public void SetRobustMode(bool robustMode) => SetParam("robustMode", robustMode);
+
         internal override OSPObjectHandle Handle => handle;
     }
 }
