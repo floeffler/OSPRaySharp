@@ -200,6 +200,15 @@ namespace OSPRay
             if (typeof(T) == typeof(OSPMaterial) || typeof(T).IsSubclassOf(typeof(OSPMaterial)))
                 return OSPDataType.Material;
 
+            if (typeof(T) == typeof(OSPInstance) || typeof(T).IsSubclassOf(typeof(OSPInstance)))
+                return OSPDataType.Instance;
+
+            if (typeof(T) == typeof(OSPGroup) || typeof(T).IsSubclassOf(typeof(OSPGroup)))
+                return OSPDataType.Group;
+
+            if (typeof(T) == typeof(OSPWorld) || typeof(T).IsSubclassOf(typeof(OSPWorld)))
+                return OSPDataType.World;
+
 
             if (typeof(T).IsSubclassOf(typeof(OSPObject)))
                 return OSPDataType.Object;

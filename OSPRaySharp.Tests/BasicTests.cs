@@ -190,7 +190,7 @@ namespace OSPRaySharp.Tests
             const int ImageSizeX = 1024;
             const int ImageSizeY = 768;
 
-            var camPos  = new Vector3(0.0f, 0.0f, 0.0f);
+            var camPos  = new Vector3(0.0f, 0.0f, -0.5f);
             var camUp   = new Vector3(0.0f, 1.0f, 0.0f);
             var camView = new Vector3(0.1f, 0.0f, 1.0f);
 
@@ -215,20 +215,20 @@ namespace OSPRaySharp.Tests
 
             using (var ospray = new OSPLibrary())
             {
-                using var camera = new OSPPerspectiveCamera();
+                var camera = new OSPPerspectiveCamera();
                 camera.SetAspect(ImageSizeX / (float)ImageSizeY);
                 camera.SetPosition(camPos);
                 camera.SetUp(camUp);
                 camera.SetDirection(camView);
                 camera.Commit();
 
-                using var mesh = new OSPMeshGeometry();
+                var mesh = new OSPMeshGeometry();
                 mesh.SetVertexPositions(vertices);
                 mesh.SetVertexColors(colors);
                 mesh.SetIndices(indices);
                 mesh.Commit();
 
-                using var model = new OSPGeometricModel(mesh);
+                var model = new OSPGeometricModel(mesh);
                 model.Commit();
 
                 using var group = new OSPGroup();
@@ -249,9 +249,10 @@ namespace OSPRaySharp.Tests
                 world.Commit();
 
                 using var renderer = new OSPSciVisRenderer();
-                renderer.SetPixelFilter(OSPPixelFilter.Gaussian);
+                renderer.SetPixelFilter(OSPPixelFilter.Mitchell);
                 renderer.SetBackgroundColor(1f);
                 renderer.SetAOSamples(1);
+                renderer.SetSamplesPerPixel(4);
                 renderer.Commit();
 
 
@@ -284,13 +285,9 @@ namespace OSPRaySharp.Tests
                     for (int i = 0; i < frameBuffer.Height; i++)
                     {
 
-                        var row = mappedColorBuffer.GetSpan<int>().Slice(i * frameBuffer.Width, frameBuffer.Width);
-                        var dstPtr = bitmapData.Scan0 + bitmapData.Stride * i;
-                        unsafe
-                        {
-                            var dst = new Span<int>(dstPtr.ToPointer(), frameBuffer.Width);
-                            row.CopyTo(dst);
-                        }
+                        var row = mappedColorBuffer.GetSpan<byte>().Slice(i * frameBuffer.Width * 4, frameBuffer.Width * 4).ToArray();
+                        var dstPtr = bitmapData.Scan0 + (bitmapData.Stride * i);
+                        Marshal.Copy(row, 0, dstPtr, row.Length);
                     }
 
                     bitmap.UnlockBits(bitmapData);
