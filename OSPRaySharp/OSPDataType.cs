@@ -161,6 +161,10 @@ namespace OSPRay
 
             if (typeof(T) == typeof(double))
                 return OSPDataType.Double;
+            
+            if (typeof(T).IsEnum)
+                return OSPDataType.Int;
+
 
             if (typeof(T) == typeof(Vector2))
                 return OSPDataType.Vec2F;
@@ -171,10 +175,16 @@ namespace OSPRay
             if (typeof(T) == typeof(Vector4))
                 return OSPDataType.Vec4F;
 
+            if (typeof(T) == typeof(Quaternion))
+                return OSPDataType.QuatF;
 
-            if (typeof(T).IsEnum)
-                return OSPDataType.Int;
+            if (typeof(T) == typeof(LinearSpace3F))
+                return OSPDataType.Linear3F;
 
+            if (typeof(T) == typeof(AffineSpace3F))
+                return OSPDataType.Affine3F;
+
+            
 
             if (typeof(T) == typeof(OSPData<>))
                 return OSPDataType.Data;

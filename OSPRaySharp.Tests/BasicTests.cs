@@ -274,6 +274,27 @@ namespace OSPRaySharp.Tests
             }
         }
 
+        [TestMethod]
+        public void TestAffineSpace()
+        {
+            var affineSpace = new AffineSpace3F(Matrix4x4.CreateTranslation(1, 2, 3));
+            Assert.AreEqual(affineSpace.P.X, 1);
+            Assert.AreEqual(affineSpace.P.Y, 2);
+            Assert.AreEqual(affineSpace.P.Z, 3);
+
+
+            var matrix = Matrix4x4.CreateLookAt(Vector3.One, Vector3.Zero, Vector3.UnitY);
+            affineSpace = new AffineSpace3F(matrix);
+
+            var v = new Vector3(0.5f, -2f, 3f);
+
+            var r1 = Vector3.Transform(v, matrix);
+            var r2 = affineSpace * v;
+
+            Assert.AreEqual(r1, r2);
+        }
+
+
         private static void ExportFrameBuffer(string filename, OSPFrameBuffer frameBuffer)
         {
             using (var mappedColorBuffer = frameBuffer.Map(OSPFrameBufferChannel.Color))
