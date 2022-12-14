@@ -116,11 +116,8 @@ namespace OSPRay
             return new OSPFrameBufferMappedData(pointer, sizeInBytes, handle);
         }
 
-        public void SetImageOperations(OSPImageOperation[]? imageOperations)
-        {
-            SetObjectArrayParam("imageOperation", imageOperations);
-        }
-
+        public void SetImageOperations(params OSPImageOperation[]? imageOperations) => SetObjectArrayParam("imageOperation", imageOperations);
+        
         /// <summary>
         /// Gets the variance of the final image. The value can be used by the application 
         /// as a quality indicator and thus to decide whether to stop or to continue progressive rendering.

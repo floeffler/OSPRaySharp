@@ -65,14 +65,27 @@ namespace OSPRay
             get;
         }
 
+        public bool TryLoadModule(string name)
+        {
+            try
+            {
+                LoadModule(name);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Loads an additional OSPRay module.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="name"></param>
         /// <exception cref="OSPException"></exception>
-        public void LoadModule(string path)
+        public void LoadModule(string name)
         {
-            int error = NativeMethods.ospLoadModule(path);
+            int error = NativeMethods.ospLoadModule(name);
             if (error != 0)
             {
                 throw new OSPException(error,

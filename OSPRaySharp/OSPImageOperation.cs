@@ -10,7 +10,7 @@ namespace OSPRay
     {
     }
 
-    public class OSPImageOperation : OSPObject
+    public abstract class OSPImageOperation : OSPObject
     {
         private OSPImageOperationHandle handle;
 

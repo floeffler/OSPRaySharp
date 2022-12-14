@@ -1,6 +1,7 @@
 using OSPRay;
 using OSPRay.Cameras;
 using OSPRay.Geometries;
+using OSPRay.ImageOperations;
 using OSPRay.Lights;
 using OSPRay.Renderers;
 using System;
@@ -94,6 +95,7 @@ namespace OSPRaySharp.Tests
             }
         }
 
+        
         [TestMethod]
         public void FrameBufferTest()
         {
@@ -119,7 +121,7 @@ namespace OSPRaySharp.Tests
                     Assert.ThrowsException<ArgumentException>(() => frameBuffer.Map(OSPFrameBufferChannel.Albedo));
                     Assert.ThrowsException<InvalidOperationException>(() => frameBuffer.Map(OSPFrameBufferChannel.Variance));
 
-                    using (var imageOp = new OSPImageOperation("tonemapper"))
+                    using (var imageOp = new OSPToneMapper())
                     {
                         frameBuffer.SetImageOperations(new OSPImageOperation[] { imageOp });
                         frameBuffer.Commit();
@@ -255,10 +257,11 @@ namespace OSPRaySharp.Tests
                 renderer.SetSamplesPerPixel(4);
                 renderer.Commit();
 
-
+                // using var tonemapper = new OSPToneMapper();
                 using var frameBuffer = new OSPFrameBuffer(ImageSizeX, ImageSizeY, OSPFrameBufferFormat.SRGBA);
-
-
+                // frameBuffer.SetImageOperations(tonemapper);
+                frameBuffer.Commit();
+                
                 renderer.ospRenderFrameBlocking(frameBuffer, camera, world);
                 ExportFrameBuffer("firstFrame.png", frameBuffer);
 
@@ -286,6 +289,14 @@ namespace OSPRaySharp.Tests
                     {
 
                         var row = mappedColorBuffer.GetSpan<byte>().Slice(i * frameBuffer.Width * 4, frameBuffer.Width * 4).ToArray();
+                        // swap rgb to bgr
+                        for (int j = 0; j < row.Length; j += 4)
+                        {
+                            var tmp  = row[j];
+                            row[j]   = row[j + 2];
+                            row[j+2] = tmp;
+                        }
+
                         var dstPtr = bitmapData.Scan0 + (bitmapData.Stride * i);
                         Marshal.Copy(row, 0, dstPtr, row.Length);
                     }
