@@ -21,6 +21,10 @@ namespace OSPRay
                 OSPDevice.ThrowLastError();
         }
 
+        public void SetTexture(string attribName, OSPTexture texture) => SetObjectParam($"map_{attribName}", texture);
+        public void SetTextureTransform(string attribName, AffineSpace3F transform) => SetParam($"map_{attribName}.transform", transform);
+        public void SetTextureTransform(string attribName, AffineSpace2F transform) => SetParam($"map_{attribName}.transform", transform);
+
         internal override OSPObjectHandle Handle => handle;
     }
 }

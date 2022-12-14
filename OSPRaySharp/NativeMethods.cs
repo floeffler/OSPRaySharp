@@ -169,5 +169,17 @@ namespace OSPRay
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern OSPInstanceHandle ospNewInstance(OSPGroupHandle group);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        internal static extern OSPVolumeHandle ospNewVolume(string type);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        internal static extern OSPTextureHandle ospNewTexture(string type);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern OSPVolumetricModelHandle ospNewVolumetricModel(OSPVolumeHandle volume);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        internal static extern OSPTransferFunctionHandle ospNewTransferFunction(string name);
     }
 }
