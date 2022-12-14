@@ -38,6 +38,22 @@ namespace OSPRay
         public LinearSpace3F L { get; set; }
         public Vector3 P { get; set; }
 
+        public AffineSpace3F? Inverted
+        {
+            get
+            {
+                var invL = L.Inverted;
+                if (invL.HasValue)
+                {
+                    return new AffineSpace3F(invL.Value, -(invL.Value * P));
+                }
+                else
+                {
+                    return null;
+                }
+}
+        }
+
         public bool Equals(AffineSpace3F other)
         {
             return L == other.L && P == other.P;
