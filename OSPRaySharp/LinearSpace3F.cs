@@ -16,9 +16,9 @@ namespace OSPRay
 
         public LinearSpace3F(Vector3 vx, Vector3 vy, Vector3 vz)
         {
-            X = vx;
-            Y = vy;
-            Z = vz;
+            VX = vx;
+            VY = vy;
+            VZ = vz;
         }
 
         public LinearSpace3F(
@@ -26,42 +26,92 @@ namespace OSPRay
             float m10, float m11, float m12,
             float m20, float m21, float m22)
         {
-            X = new Vector3(m00, m10, m20);
-            Y = new Vector3(m01, m11, m21);
-            Z = new Vector3(m02, m12, m22);
+            VX = new Vector3(m00, m10, m20);
+            VY = new Vector3(m01, m11, m21);
+            VZ = new Vector3(m02, m12, m22);
         }
 
-        public Vector3 X { get; set; }
-        public Vector3 Y { get; set; }
-        public Vector3 Z { get; set; }
+        public Vector3 VX { get; set; }
+        public Vector3 VY { get; set; }
+        public Vector3 VZ { get; set; }
 
+        public float Determinant => Vector3.Dot(VX, Vector3.Cross(VY, VZ));
+
+        public LinearSpace3F Adjoint
+        {
+            get
+            {
+                return new LinearSpace3F(
+                   Vector3.Cross(VY, VZ),
+                   Vector3.Cross(VZ, VX),
+                   Vector3.Cross(VX, VY)).Transposed;
+            }
+        }
+
+        public LinearSpace3F Transposed
+        {
+            get
+            {
+                return new LinearSpace3F(
+                            VX.X, VX.Y, VX.Z,
+                            VY.X, VY.Y, VY.Z,
+                            VZ.X, VZ.Y, VZ.Z);
+            }
+        }
+
+        public LinearSpace3F? Inverted
+        {
+            get
+            {
+                float det = Determinant;
+                if (det != 0)
+                    return Adjoint / det;
+                else
+                    return null;
+            }
+        }
 
         public bool Equals(LinearSpace3F other)
         {
-            return X == other.X && Y == other.Y && Z == other.Z;
+            return VX == other.VX && VY == other.VY && VZ == other.VZ;
         }
 
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
-            return obj is LinearSpace3F other && Equals(other); 
+            return obj is LinearSpace3F other && Equals(other);
         }
-      
-        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
-        public override string ToString() => FormattableString.Invariant($"vx: {X}, vy: {Y}, vz: {Z}");
+        public override int GetHashCode() => HashCode.Combine(VX, VY, VZ);
 
-        public static bool operator ==(LinearSpace3F left, LinearSpace3F right) => left.X == right.X && left.Y == right.Y && left.Z == right.Z;
-        public static bool operator !=(LinearSpace3F left, LinearSpace3F right) => left.X != right.X || left.Y != right.Y || left.Z != right.Z;
+        public override string ToString() => FormattableString.Invariant($"vx: {VX}, vy: {VY}, vz: {VZ}");
+
+        public static bool operator ==(LinearSpace3F left, LinearSpace3F right) => left.VX == right.VX && left.VY == right.VY && left.VZ == right.VZ;
+        public static bool operator !=(LinearSpace3F left, LinearSpace3F right) => left.VX != right.VX || left.VY != right.VY || left.VZ != right.VZ;
 
 
         public static LinearSpace3F operator *(LinearSpace3F left, LinearSpace3F right)
         {
-            return new LinearSpace3F(left * right.X, left * right.Y, left * right.Z);
+            return new LinearSpace3F(left * right.VX, left * right.VY, left * right.VZ);
         }
 
-        public static Vector3 operator* (LinearSpace3F left, Vector3 right)
+        public static LinearSpace3F operator* (float left, LinearSpace3F right)
         {
-            return left.X * right.X + left.Y * right.Y + left.Z * right.Z;
+            return new LinearSpace3F(
+                left * right.VX,
+                left * right.VY,
+                left * right.VZ);
         }
+
+        public static LinearSpace3F operator /(LinearSpace3F left, float right)
+        {
+            float rcpRight = 1f / right;
+            return rcpRight * left;
+        }
+
+        public static Vector3 operator *(LinearSpace3F left, Vector3 right)
+        {
+            return left.VX * right.X + left.VY * right.Y + left.VZ * right.Z;
+        }
+
     }
 }
