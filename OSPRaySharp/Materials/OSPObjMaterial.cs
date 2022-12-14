@@ -18,13 +18,15 @@ namespace OSPRay.Materials
         }
 
         public void SetDiffuse(Vector3 kd) => SetParam("kd", kd);
+        public void SetDiffuse(OSPTexture texture) => SetTexture("kd", texture);
         public void SetSpecular(Vector3 ks) => SetParam("ks", ks);
+        public void SetSpecular(OSPTexture texture) => SetTexture("ks", texture);
         public void SetTransparentFilterColor(Vector3 tf) => SetParam("tf", tf);
         public void SetOpacity(float d) => SetParam("d", d);
+        public void SetOpacity(OSPTexture texture) => SetTexture("d", texture);
         public void SetShininess(float ns) => SetParam("ns", ns);
-
-
-        //TODO: bump map
-
+        public void SetShininess(OSPTexture texture) => SetTexture("ns", texture);
+        public void SetNormalMap(OSPTexture normalMap) => SetObjectParam("map_bump", normalMap);
+        
     }
 }
