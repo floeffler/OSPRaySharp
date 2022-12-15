@@ -35,7 +35,7 @@ namespace OSPRay
         public void SetBackgroundColor(Vector4 rgbaColor) => SetParam("backgroundColor", rgbaColor);
 
         public void SetBackplate(OSPTexture backplate) => SetObjectParam("map_backplate", backplate);
-        public void SetMaxDepth(OSPTexture maxDepth) => SetParam("map_maxDepth", maxDepth);
+        public void SetMaxDepth(OSPTexture maxDepth) => SetObjectParam("map_maxDepth", maxDepth);
         public void SetMaterial(OSPMaterial[] material) => SetObjectArrayParam("material", material);
         public void SetPixelFilter(OSPPixelFilter filter) => SetParam("pixelFilter", filter);
 

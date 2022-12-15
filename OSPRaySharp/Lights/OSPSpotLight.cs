@@ -10,7 +10,7 @@ namespace OSPRay.Lights
     /// <summary>
     /// The spotlight is a light emitting into a cone of directions.
     /// </summary>
-    public class OSPSpotLight : OSPLight
+    public class OSPSpotLight : OSPPhotometricLight
     {
         public OSPSpotLight() : base("spot")
         {

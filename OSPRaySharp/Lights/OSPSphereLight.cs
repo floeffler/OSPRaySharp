@@ -11,7 +11,7 @@ namespace OSPRay.Lights
     /// The sphere light (or the special case point light) is a light emitting uniformly in all directions 
     /// from the surface toward the outside. It does not emit any light toward the inside of the sphere.
     /// </summary>
-    public class OSPSphereLight : OSPLight
+    public class OSPSphereLight : OSPPhotometricLight
     {
         public OSPSphereLight() : base("sphere")
         {

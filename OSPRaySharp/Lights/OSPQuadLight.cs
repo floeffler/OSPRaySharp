@@ -10,7 +10,7 @@ namespace OSPRay.Lights
     /// <summary>
     /// The quad light is a planar, procedural area light source emitting uniformly on one side into the half-space. 
     /// </summary>
-    public class OSPQuadLight : OSPLight
+    public class OSPQuadLight : OSPPhotometricLight
     {
         public OSPQuadLight() : base("quad")
         {
