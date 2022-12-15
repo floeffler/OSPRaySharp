@@ -27,6 +27,7 @@ namespace OSPRay
         }
 
         public void SetGeometry(params OSPGeometricModel[] geometry) => SetObjectArrayParam("geometry", geometry);
+        public void SetVolume(params OSPVolumetricModel[] volume) => SetObjectArrayParam("volume", volume);
         public void SetClippingGeometry(params OSPGeometricModel[] clippingGeometry) => SetObjectArrayParam("clippingGeometry", clippingGeometry);
         public void SetLight(params OSPLight[] lights) => SetObjectArrayParam("lights", lights);
         public void SetDynamicScene(bool dynamicScene) => SetParam("dynamicScene", dynamicScene);

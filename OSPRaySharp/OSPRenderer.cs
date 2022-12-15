@@ -25,7 +25,6 @@ namespace OSPRay
             }
         }
 
-        public void SetPixelFilter(OSPPixelFilter filter) => SetParam("pixelFilter", filter);
         public void SetSamplesPerPixel(int pixelSamples) => SetParam("pixelSamples", pixelSamples);
         public void SetMaxPathLength(int maxPathLength) => SetParam("maxPathLength", maxPathLength);
         public void SetMinContribution(float minContribution) => SetParam("minContribution", minContribution);
@@ -35,7 +34,10 @@ namespace OSPRay
         public void SetBackgroundColor(Vector3 rgbColor) => SetParam("backgroundColor", rgbColor);
         public void SetBackgroundColor(Vector4 rgbaColor) => SetParam("backgroundColor", rgbaColor);
 
-
+        public void SetBackplate(OSPTexture backplate) => SetObjectParam("map_backplate", backplate);
+        public void SetMaxDepth(OSPTexture maxDepth) => SetParam("map_maxDepth", maxDepth);
+        public void SetMaterial(OSPMaterial[] material) => SetObjectArrayParam("material", material);
+        public void SetPixelFilter(OSPPixelFilter filter) => SetParam("pixelFilter", filter);
 
         public OSPFuture RenderFrame(OSPFrameBuffer frameBuffer, OSPCamera camera, OSPWorld world)
         {

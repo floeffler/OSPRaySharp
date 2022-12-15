@@ -24,8 +24,10 @@ namespace OSPRay
         }
 
         public void SetGroup(OSPGroup group) => SetObjectParam("group", group);
-        public void SetId(uint id) => SetParam("id", id);
+        public void SetTransform(AffineSpace3F transform) => SetParam("transform", transform);
+        public void SetMotionTransform(AffineSpace3F[] transform) => SetArrayParam("motion.transform", transform);
         public unsafe void SetTime(float startTime, float endTime) => SetParam("time", OSPDataType.Box1F, startTime, endTime);
+        public void SetId(uint id) => SetParam("id", id);
 
 
         internal override OSPObjectHandle Handle => handle;
