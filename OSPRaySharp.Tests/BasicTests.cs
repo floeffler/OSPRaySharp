@@ -187,7 +187,7 @@ namespace OSPRaySharp.Tests
         }
 
         [TestMethod]
-        public void HelloWorld()
+        public void TestHelloWorld()
         {
             const int ImageSizeX = 1024;
             const int ImageSizeY = 768;

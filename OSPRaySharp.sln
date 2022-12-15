@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSPRaySharp", "OSPRaySharp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSPRaySharp.Tests", "OSPRaySharp.Tests\OSPRaySharp.Tests.csproj", "{F78FD7AB-329F-411F-8266-172C531C45AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSPRaySharp.TestSuite", "OSPRaySharp.TestSuite\OSPRaySharp.TestSuite.csproj", "{BB8F16AA-5891-497A-9F5D-7DADFAF39A9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F78FD7AB-329F-411F-8266-172C531C45AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F78FD7AB-329F-411F-8266-172C531C45AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F78FD7AB-329F-411F-8266-172C531C45AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8F16AA-5891-497A-9F5D-7DADFAF39A9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8F16AA-5891-497A-9F5D-7DADFAF39A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8F16AA-5891-497A-9F5D-7DADFAF39A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8F16AA-5891-497A-9F5D-7DADFAF39A9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
