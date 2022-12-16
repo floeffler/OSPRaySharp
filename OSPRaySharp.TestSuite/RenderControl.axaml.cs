@@ -33,7 +33,12 @@ namespace OSPRay.TestSuite
         private int samplesPerPixelIndex = 0;
         private int aoSamplesIndex = 0;
         private Pose cameraPose = HomePose;
-        
+        private int rendererIndex = 0;
+
+        private float lensRadius = 0f;
+        private float focusDistance = 1f;
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public RenderControlModel()
@@ -115,7 +120,25 @@ namespace OSPRay.TestSuite
             }
         }
 
+        public int RendererIndex
+        {
+            get => rendererIndex;
+            set
+            {
+                if (rendererIndex != value)
+                {
+                    rendererIndex = value;
+                    renderer?.SetRenderer((RendererType)rendererIndex);
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(IsPathTracer));
+                }
+            }
+        }
 
+        public bool IsPathTracer
+        {
+            get => rendererIndex == 2;
+        }
 
         public Pose CameraPose
         {
@@ -130,6 +153,49 @@ namespace OSPRay.TestSuite
                 }
             }
         }
+
+        public float LensRadius
+        {
+            get => lensRadius;
+            set
+            {
+                if (lensRadius != value)
+                {
+                    lensRadius = value;
+                    renderer?.SetThinLens(focusDistance, lensRadius);
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(LensRadiusSlider));
+                }
+            }
+        }
+
+        public float FocusDistance
+        {
+            get => focusDistance;
+            set
+            {
+                if (focusDistance != value)
+                {
+                    focusDistance = value;
+                    renderer?.SetThinLens(focusDistance, lensRadius);
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(FocusDistanceSlider));
+                }
+            }
+        }
+
+        public int FocusDistanceSlider
+        {
+            get => (int)(focusDistance * 100);
+            set => FocusDistance = value / 100f;
+        }
+
+        public int LensRadiusSlider
+        {
+            get => (int)(lensRadius * 1000);
+            set => LensRadius = value / 1000f;
+        }
+
 
         public TransformInteractor Interactor
         {
@@ -273,6 +339,18 @@ namespace OSPRay.TestSuite
                 };
 
                 model.Interactor.InjectMouseEvent(evt);
+            }
+
+            if (currentPoint != null && currentPoint.Properties.IsMiddleButtonPressed== true)
+            {
+                var p = currentPoint.Position;
+                var scenePos = model.GetSceneCoordinate((float)p.X, (float)p.Y);
+                if (scenePos.HasValue)
+                {
+                    var cameraFrame = model.CameraPose.ToFrame();
+                    var direction = cameraFrame.Position - scenePos.Value;
+                    model.FocusDistance = Vector3.Dot(direction, cameraFrame.Front); // get the new focal plane distance
+                }
             }
         }
 

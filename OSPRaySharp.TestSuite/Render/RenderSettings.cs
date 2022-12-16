@@ -167,7 +167,7 @@ namespace OSPRay.TestSuite.Render
                         renderer = new OSPAmbientOcclusionRenderer();
                         break;
                     case RendererType.PathTracer:
-                        renderer = new OSPAmbientOcclusionRenderer();
+                        renderer = new OSPPathTracer();
                         break;
                     default:
                         renderer = new OSPSciVisRenderer();

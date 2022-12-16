@@ -12,7 +12,7 @@
 		</StackPanel>
 	
 		<Image Grid.Row="0" Name="image" Source="{Binding Content}" IsVisible="False" Stretch="UniformToFill"/>
-		<StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal">
+		<StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Center">
 			<Button Content="&#x21bb;" Command="{Binding RefreshCommand}" Margin="0 0 5 0"/>
 			<Button Content="&#x2302;" Command="{Binding HomeViewCommand}"/>
 			<Button Content="&#11121;" Command="{Binding FrontViewCommand}"/>
@@ -32,7 +32,7 @@
 				<ComboBoxItem>8 spp</ComboBoxItem>
 				<ComboBoxItem>16 spp</ComboBoxItem>
 			</ComboBox>
-			<ComboBox SelectedIndex="{Binding AOSamplesIndex}">
+			<ComboBox SelectedIndex="{Binding AOSamplesIndex}" Margin="0 0 5 0">
 				<DropDownItem>1 aos</DropDownItem>
 				<DropDownItem>2 aos</DropDownItem>
 				<DropDownItem>4 aos</DropDownItem>
@@ -41,6 +41,24 @@
 				<DropDownItem>32 aos</DropDownItem>
 				<DropDownItem>64 aos</DropDownItem>
 			</ComboBox>
+			
+			<ComboBox SelectedIndex="{Binding RendererIndex}">
+				<DropDownItem>SciVis</DropDownItem>
+				<DropDownItem>AO</DropDownItem>
+				<DropDownItem>PathTracer</DropDownItem>
+			</ComboBox>
+			<Button Content="Lens &#9881;" IsEnabled="{Binding IsPathTracer}">
+				<Button.Flyout>
+					<Flyout>
+						<StackPanel>
+							<TextBlock>Lens Radius:</TextBlock>
+							<Slider Minimum="0" Maximum="500" Width="250" Value="{Binding LensRadiusSlider}" Ticks="1"/>
+							<TextBlock Margin="0 10 0 0">Focus Distance:</TextBlock>
+							<Slider Minimum="1" Maximum="500" Width="250" Value="{Binding FocusDistanceSlider}" Ticks="1"/>
+						</StackPanel>
+					</Flyout>
+				</Button.Flyout>
+			</Button>
 		</StackPanel>
 	</Grid>
 </UserControl>
