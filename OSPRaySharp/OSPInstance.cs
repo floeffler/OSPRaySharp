@@ -8,6 +8,8 @@ namespace OSPRay
 {
     internal class OSPInstanceHandle : OSPObjectHandle
     {
+        public OSPInstanceHandle() : base() { }
+        public OSPInstanceHandle(IntPtr handle): base(handle) { }
     }
 
     /// <summary>
@@ -16,6 +18,11 @@ namespace OSPRay
     public class OSPInstance : OSPObject
     {
         private OSPInstanceHandle handle;
+
+        internal OSPInstance(OSPInstanceHandle handle) : base()
+        {
+            this.handle = handle;
+        }
 
         public OSPInstance(OSPGroup? group): base()
         {

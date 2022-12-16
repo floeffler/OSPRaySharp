@@ -9,6 +9,8 @@ namespace OSPRay
 {
     internal class OSPGeometricModelHandle : OSPObjectHandle
     {
+        public OSPGeometricModelHandle() : base() { }
+        public OSPGeometricModelHandle(IntPtr handle) : base(handle) { }
     }
 
     /// <summary>
@@ -20,6 +22,11 @@ namespace OSPRay
     {
         private OSPGeometricModelHandle handle;
 
+        internal OSPGeometricModel(OSPGeometricModelHandle handle)
+        {
+            this.handle = handle;
+        }
+        
         public OSPGeometricModel(OSPGeometry? geometry)
         {
             OSPGeometryHandle geometryHandle = OSPGeometryHandle.Empty;

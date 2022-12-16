@@ -53,7 +53,7 @@ namespace OSPRay
             return new OSPFuture(future);
         }
 
-        public float ospRenderFrameBlocking(OSPFrameBuffer frameBuffer, OSPCamera camera, OSPWorld world)
+        public float RenderFrameBlocking(OSPFrameBuffer frameBuffer, OSPCamera camera, OSPWorld world)
         {
             float variance = NativeMethods.ospRenderFrameBlocking(
                 (OSPFrameBufferHandle)frameBuffer.Handle,
@@ -63,6 +63,21 @@ namespace OSPRay
 
             OSPDevice.CheckLastDeviceError();
             return variance;
+        }
+
+        public OSPPickResult Pick(OSPFrameBuffer frameBuffer, OSPCamera camera, OSPWorld world, float screenX, float screenY)
+        {
+            NativeMethods.ospPick(
+                out var pickResult, 
+                (OSPFrameBufferHandle)frameBuffer.Handle,
+                handle,
+                (OSPCameraHandle)camera.Handle,
+                (OSPWorldHandle)world.Handle,
+                screenX,
+                screenY);
+
+            OSPDevice.CheckLastDeviceError();
+            return new OSPPickResult(pickResult);
         }
 
         internal override OSPObjectHandle Handle => handle;

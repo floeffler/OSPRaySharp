@@ -11,6 +11,9 @@ namespace OSPRay
 {
     internal class OSPObjectHandle : OSPHandle
     {
+        public OSPObjectHandle(IntPtr handle): base(handle) { }
+        public OSPObjectHandle():base() { }
+
         protected override bool ReleaseHandle()
         {
             NativeMethods.ospRelease(handle);

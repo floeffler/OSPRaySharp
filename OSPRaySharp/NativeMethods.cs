@@ -181,5 +181,15 @@ namespace OSPRay
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         internal static extern OSPTransferFunctionHandle ospNewTransferFunction(string name);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void ospPick(
+            out OSPPickResultNative pickResult,
+            OSPFrameBufferHandle frameBuffer,
+            OSPRendererHandle renderer,
+            OSPCameraHandle camera,
+            OSPWorldHandle world,
+            float screenPos_x,
+            float screenPos_y);
     }
 }

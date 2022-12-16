@@ -11,7 +11,7 @@ namespace OSPRay
     /// </summary>
     public enum OSPPixelFilter
     {
-        Point,
+        Point = 0,
         Box,
         Gaussian,
         Mitchell,

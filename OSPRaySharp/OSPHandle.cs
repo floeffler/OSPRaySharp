@@ -9,6 +9,11 @@ namespace OSPRay
 {
     internal abstract class OSPHandle : SafeHandle, IEquatable<OSPHandle>
     {
+        public OSPHandle(IntPtr handle): base(IntPtr.Zero, true)
+        {
+            SetHandle(handle);
+        }
+
         public OSPHandle(): base(IntPtr.Zero, false) 
         { 
         }

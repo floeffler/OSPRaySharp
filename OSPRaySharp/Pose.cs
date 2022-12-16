@@ -11,6 +11,9 @@ namespace OSPRay
 {
     public struct Pose : IEquatable<Pose>
     {
+        public static readonly Pose Identity = new Pose(Vector3.Zero, Quaternion.Identity);
+        
+
         public Pose(Vector3 p)
         {
             Position = p;
@@ -46,16 +49,17 @@ namespace OSPRay
 
         public Matrix4x4 ToMatrix4x4()
         {
-            return Matrix4x4.CreateFromQuaternion(Rotation) *
-                   Matrix4x4.CreateTranslation(Position);
+            return 
+                Matrix4x4.CreateFromQuaternion(Rotation) * 
+                Matrix4x4.CreateTranslation(Position);
         }
 
-        public static Pose Identity
+        public Frame ToFrame()
         {
-            get
-            {
-                return new Pose(Vector3.Zero, Quaternion.Identity);
-            }
+            var right = Vector3.Normalize(Vector3.Transform(Vector3.UnitX, Rotation));
+            var up = Vector3.Normalize(Vector3.Transform(Vector3.UnitY, Rotation));
+            var front = Vector3.Normalize(Vector3.Transform(Vector3.UnitZ, Rotation));
+            return new Frame(right, up, front, Position);
         }
 
         public bool Equals(Pose other)
