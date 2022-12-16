@@ -58,7 +58,7 @@ namespace OSPRay.TestSuite.Render
         private ConcurrentQueue<RenderCommand> commands = new ConcurrentQueue<RenderCommand>();
         private int alive = 0;
         private ResizeRequest? currentResizeRequest = null;
-
+        private RenderSettings? renderSettings = null;
 
         public RenderThread()
         {
@@ -73,6 +73,8 @@ namespace OSPRay.TestSuite.Render
         public Exception? Exception { get; set; }
 
         public bool Alive => alive > 0;
+
+        public RenderSettings? RenderSettings => renderSettings;
 
         public bool EnqueueCommand(RenderCommand command)
         {
@@ -127,6 +129,11 @@ namespace OSPRay.TestSuite.Render
             try
             {
                 renderContext = new RenderContext();
+
+                // create the render settings
+                renderSettings = new RenderSettings();
+                renderSettings.Setup(renderContext);
+
                 var watch = Stopwatch.StartNew();
 
             
@@ -152,8 +159,10 @@ namespace OSPRay.TestSuite.Render
                         }
                     }
 
+                    // update render settings
+                    renderSettings?.Update(renderContext); 
                     // update model
-                    renderContext.SceneModel?.Update(renderContext);
+                    renderContext.Model?.Update(renderContext);
 
                     // render stuff
                     if (InteractiveMode && renderContext.CanRenderFrame)
@@ -186,7 +195,12 @@ namespace OSPRay.TestSuite.Render
             }
             finally
             {
+                if (renderContext != null)
+                    renderSettings?.Free(renderContext);
+
+                renderSettings = null;
                 renderContext?.Dispose();
+                renderContext = null;
 
                 // clear queue
                 while (commands.TryDequeue(out var command))

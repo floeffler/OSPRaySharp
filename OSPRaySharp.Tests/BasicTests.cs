@@ -262,12 +262,12 @@ namespace OSPRaySharp.Tests
                 // frameBuffer.SetImageOperations(tonemapper);
                 frameBuffer.Commit();
                 
-                renderer.ospRenderFrameBlocking(frameBuffer, camera, world);
+                renderer.RenderFrameBlocking(frameBuffer, camera, world);
                 ExportFrameBuffer("firstFrame.png", frameBuffer);
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    renderer.ospRenderFrameBlocking(frameBuffer, camera, world);
+                    renderer.RenderFrameBlocking(frameBuffer, camera, world);
                 }
 
                 ExportFrameBuffer("finalFrame.png", frameBuffer);

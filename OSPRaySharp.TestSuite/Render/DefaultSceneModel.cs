@@ -12,7 +12,7 @@ using OSPRay.Lights;
 
 namespace OSPRay.TestSuite.Render
 {
-    internal class DefaultSceneModel : SceneModel
+    internal class DefaultSceneModel : Model
     {
         public DefaultSceneModel()
         {
@@ -26,16 +26,16 @@ namespace OSPRay.TestSuite.Render
 
         internal override void Setup(RenderContext renderContext)
         {
-            var camPos = new Vector3(0.0f, 0.0f, -0.5f);
+            var camPos = new Vector3(0.0f, 0.0f, 0.5f);
             var camUp = new Vector3(0.0f, 1.0f, 0.0f);
-            var camView = new Vector3(0.1f, 0.0f, 1.0f);
+            var camView = new Vector3(0.1f, 0.0f, -1.0f);
 
             // triangle mesh data
             var vertices = new Vector3[] {
-                new Vector3(-1.0f, -1.0f, 3.0f),
-                new Vector3(-1.0f,  1.0f, 3.0f),
-                new Vector3( 1.0f, -1.0f, 3.0f),
-                new Vector3( 0.1f,  0.1f, 0.3f)
+                new Vector3(-1f, -1.0f, -0.5f),
+                new Vector3(-1f,  1.0f, -0.5f),
+                new Vector3( 1f, -1.0f, -0.5f),
+                new Vector3( 1f,  1.0f,  0.5f)
             };
 
             var colors = new Vector4[] {
@@ -91,6 +91,10 @@ namespace OSPRay.TestSuite.Render
             renderer.SetSamplesPerPixel(4);
             renderer.Commit();
             renderContext.Renderer = renderer;
+        }
+
+        protected override void UpdateCore(RenderContext renderContext, int stateChanges)
+        {
         }
     }
 }

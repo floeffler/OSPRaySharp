@@ -65,6 +65,11 @@ namespace OSPRay.TestSuite.Render
             while (currentChanges != (currentChanges = Interlocked.CompareExchange(ref changes, currentChanges | stateBit, currentChanges)));
         }
 
+        /// <summary>
+        /// Update the model in the render thread. Applies the changes of the model to
+        /// the corresponding resources in the render thread.
+        /// </summary>
+        /// <param name="renderContext"></param>
         internal virtual void Update(RenderContext renderContext)
         {
             if (UpdateSuspended)
@@ -77,6 +82,24 @@ namespace OSPRay.TestSuite.Render
 
             // update
             UpdateCore(renderContext, stateChanges);
+        }
+
+        /// <summary>
+        /// Setup the model in the render thread. 
+        /// Implementors can override this method to create resources in the render thread.
+        /// </summary>
+        /// <param name="renderContext"></param>
+        internal virtual void Setup(RenderContext renderContext)
+        {
+        }
+
+        /// <summary>
+        /// Frees the model in the render thread. Use this method to destroy resources that
+        /// are used in the render thread.
+        /// </summary>
+        /// <param name="renderContext"></param>
+        internal virtual void Free(RenderContext renderContext)
+        {
         }
 
         protected abstract void UpdateCore(RenderContext renderContext, int stateChanges);

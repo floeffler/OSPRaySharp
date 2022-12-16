@@ -12,8 +12,35 @@
 		</StackPanel>
 	
 		<Image Grid.Row="0" Name="image" Source="{Binding Content}" IsVisible="False" Stretch="UniformToFill"/>
-		<Panel Grid.Row="1" Margin="5">
-			<Button Content="&#x21bb;" Command="{Binding RefreshCommand}"/>
-		</Panel>
+		<StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal">
+			<Button Content="&#x21bb;" Command="{Binding RefreshCommand}" Margin="0 0 5 0"/>
+			<Button Content="&#x2302;" Command="{Binding HomeViewCommand}"/>
+			<Button Content="&#11121;" Command="{Binding FrontViewCommand}"/>
+			<Button Content="&#11123;" Command="{Binding TopViewCommand}"/>
+			<Button Content="&#11122;" Command="{Binding LeftViewCommand}" Margin="0 0 5 0"/>
+			<DropDown SelectedIndex="{Binding FilterIndex}">
+				<DropDownItem>Point</DropDownItem>
+				<DropDownItem>Box</DropDownItem>
+				<DropDownItem>Gaussian</DropDownItem>
+				<DropDownItem>Mitchell</DropDownItem>
+				<DropDownItem>Blackman-Harris</DropDownItem>
+			</DropDown>
+			<DropDown SelectedIndex="{Binding SamplesPerPixelIndex}">
+				<DropDownItem>1 spp</DropDownItem>
+				<DropDownItem>2 spp</DropDownItem>
+				<DropDownItem>4 spp</DropDownItem>
+				<DropDownItem>8 spp</DropDownItem>
+				<DropDownItem>16 spp</DropDownItem>
+			</DropDown>
+			<DropDown SelectedIndex="{Binding AOSamplesIndex}">
+				<DropDownItem>1 aos</DropDownItem>
+				<DropDownItem>2 aos</DropDownItem>
+				<DropDownItem>4 aos</DropDownItem>
+				<DropDownItem>8 aos</DropDownItem>
+				<DropDownItem>16 aos</DropDownItem>
+				<DropDownItem>32 aos</DropDownItem>
+				<DropDownItem>64 aos</DropDownItem>
+			</DropDown>
+		</StackPanel>
 	</Grid>
 </UserControl>

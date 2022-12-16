@@ -1,13 +1,22 @@
-﻿using OSPRay;
+﻿using Avalonia.Controls;
+using OSPRay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OSPRay.TestSuite.Render
 {
+
+    internal class ValueReference<T> where T : struct
+    {
+        public T? Value { get; set; }
+    }
+
+
     internal class Renderer : IDisposable
     {
         private OSPLibrary ospray;
@@ -47,12 +56,17 @@ namespace OSPRay.TestSuite.Render
             renderThread.InteractiveMode = interactive;
         }
 
-        public void SetSceneModel(SceneModel? sceneModel)
+        /// <summary>
+        /// Sets the model to render 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void SetModel(Model? model)
         {
             bool res = InvokeAsync(x =>
             {
                 if (x != null)
-                    x.SceneModel = sceneModel;
+                    x.Model = model;
             });
 
             if (res == false)
@@ -62,6 +76,80 @@ namespace OSPRay.TestSuite.Render
         public void Refresh() => InvokeAsync(x => x?.ResetAccumulation());
 
         public void Resize(int width, int height) => renderThread.Resize(width, height);
+
+        public void SetCameraPose(Pose cameraPose)
+        {
+            var settings = renderThread.RenderSettings;
+            if (settings != null)
+            {
+                settings.CameraPose = cameraPose;
+            }
+        }
+
+        public void SetThinLens(float focalDistance, float apertureRadius)
+        {
+            var settings = renderThread.RenderSettings;
+            if (settings != null)
+            {
+                settings.FocusDistance = focalDistance;
+                settings.ApertureRadius = apertureRadius;
+            }
+        }
+
+        public void SetRenderer(RendererType rendererType)
+        {
+            var settings = renderThread.RenderSettings;
+            if (settings != null)
+            {
+                settings.RendererType = rendererType;
+            }
+        }
+
+        public void SetRendererSamples(int samplesPerPixel, int aoSamples)
+        {
+            var settings = renderThread.RenderSettings;
+            if (settings != null)
+            {
+                settings.SamplesPerPixel = samplesPerPixel;
+                settings.AOSamples = aoSamples;
+            }
+        }
+
+        public void SetPixelFilter(OSPPixelFilter pixelFilter)
+        {
+            var settings = renderThread.RenderSettings;
+            if (settings != null)
+            {
+                settings.PixelFilter = pixelFilter;
+            }
+        }
+
+        public Vector3? Pick(float windowX, float windowY)
+        {
+            ManualResetEvent manualReset = new ManualResetEvent(false);
+            var output = new ValueReference<Vector3>();
+
+            bool res = InvokeAsync(x =>
+            {
+                try
+                {
+                    if (x != null)
+                    {
+                        output.Value = x.Pick(windowX, windowY);
+                    }
+                }
+                finally
+                {
+                    manualReset.Set();
+                }
+            });
+            if (res)
+            {
+                manualReset.WaitOne();
+                return output.Value;
+            }
+            return null;
+        }
 
         /// <summary>
         /// blocks the current thread until the current enquened work is completed
