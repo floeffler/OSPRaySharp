@@ -61,12 +61,15 @@ namespace OSPRay.TestSuite.Render
         /// </summary>
         /// <param name="model"></param>
         /// <exception cref="InvalidOperationException"></exception>
-        public void SetModel(Model? model)
+        public void SetRenderModel(RenderModel? model)
         {
             bool res = InvokeAsync(x =>
             {
                 if (x != null)
+                {
                     x.Model = model;
+                    x.ResetAccumulation();
+                }
             });
 
             if (res == false)

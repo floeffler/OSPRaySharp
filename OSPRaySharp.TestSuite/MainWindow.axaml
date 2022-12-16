@@ -8,7 +8,17 @@
         Title="OSPRay.TestSuite"
 		MinWidth="600"
 		MinHeight="400">
-	<Grid ColumnDefinitions="*" RowDefinitions="*">
+	<Grid ColumnDefinitions="*, auto" RowDefinitions="*">
 		<custom:RenderControl Name="renderControl" Grid.Column="0" Grid.Row="0"/>
+		<StackPanel Grid.Column="1" Grid.Row="0" Margin="5">
+			<ComboBox SelectedIndex="{Binding SceneIndex}" Items="{Binding Scenes}" Width="250">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<ComboBoxItem Content="{Binding Name}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<ScrollViewer Content="{Binding CurrentScene}" Margin="0 10 0 0"/>
+		</StackPanel>
 	</Grid>
 </Window>

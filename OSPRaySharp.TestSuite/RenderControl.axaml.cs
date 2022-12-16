@@ -28,7 +28,7 @@ namespace OSPRay.TestSuite
 
         private WriteableBitmap? content = null;
         private Renderer? renderer = null;
-        private Model? sceneModel = new DefaultSceneModel();
+        private RenderModel? renderModel = null;
         private int filterIndex = 0;
         private int samplesPerPixelIndex = 0;
         private int aoSamplesIndex = 0;
@@ -62,18 +62,18 @@ namespace OSPRay.TestSuite
             set
             {
                 renderer = value;
-                renderer?.SetModel(sceneModel);
+                renderer?.SetRenderModel(renderModel);
                 NotifyPropertyChanged();
             }
         }
 
-        public Model? SceneModel
+        public RenderModel? RenderModel
         {
-            get => sceneModel;
+            get => renderModel;
             set
             {
-                sceneModel = value;
-                Renderer?.SetModel(sceneModel);
+                renderModel = value;
+                Renderer?.SetRenderModel(renderModel);
                 NotifyPropertyChanged();
             }
         }
@@ -202,6 +202,16 @@ namespace OSPRay.TestSuite
             get;
         }
 
+        public void UpdateRenderState()
+        {
+            renderer?.SetRenderModel(renderModel);
+            renderer?.SetPixelFilter((OSPPixelFilter)filterIndex);
+            renderer?.SetRendererSamples(1 << samplesPerPixelIndex, 1 << aoSamplesIndex);
+            renderer?.SetRenderer((RendererType)rendererIndex);
+            renderer?.SetCameraPose(cameraPose);
+            renderer?.SetThinLens(focusDistance, lensRadius);
+        }
+
 
         public void RefreshCommand() => Renderer?.Refresh();
 
@@ -212,8 +222,6 @@ namespace OSPRay.TestSuite
         public void TopViewCommand() => AnimateCameraTo(TopPose, Interactor.Reset);
 
         public void LeftViewCommand() => AnimateCameraTo(LeftPose, Interactor.Reset);
-
-        private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public Vector3? GetSceneCoordinate(float x, float y) => renderer?.Pick(x, y);
 
@@ -239,6 +247,8 @@ namespace OSPRay.TestSuite
         {
             return x < 0.5 ? 4 * x * x * x : 1 - Math.Pow(-2 * x + 2, 3) / 2;
         }
+
+        private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public partial class RenderControl : UserControl
@@ -419,6 +429,7 @@ namespace OSPRay.TestSuite
             model.Renderer = await CreateRenderer();
             model.Renderer.Resize((int)image.Width, (int)image.Height);
             model.Renderer.SetInteractive(true);
+            model.UpdateRenderState();
 
             initPanel.IsVisible = false;
             image.IsVisible = true;
@@ -439,6 +450,11 @@ namespace OSPRay.TestSuite
                 renderer.FrameCompleted += OnRendererFrameCompleted;
                 return renderer;
             });
+        }
+
+        internal void SetRenderModel(RenderModel? value)
+        {
+            model.RenderModel = value;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace OSPRay.TestSuite.Render
         private OSPCamera? camera = null;
         private OSPFrameBuffer? frameBuffer = null;
         private OSPWorld? world = null;
-        private Model? model = null;
+        private RenderModel? model = null;
 
         public RenderContext() 
         {
@@ -91,7 +91,7 @@ namespace OSPRay.TestSuite.Render
         /// <summary>
         /// The model to render
         /// </summary>
-        public Model? Model
+        public RenderModel? Model
         {
             get => model;
             set

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace OSPRay.TestSuite.Render
 {
-    internal abstract class Model
+    internal abstract class RenderModel
     {
         public const int ALL_STATES_BIT = -1;
 
         private int changes;
         private int suspendUpdate = 0;
 
-        public Model()
+        public RenderModel()
         {
         }
 

@@ -18,7 +18,7 @@ namespace OSPRay.TestSuite.Render
         PathTracer,
     }
 
-    internal class RenderSettings : Model
+    internal class RenderSettings : RenderModel
     {
         private const int RENDERER_BIT = 1 << 0;
         private const int RENDERER_PARAM_BIT = 1 << 1;
@@ -28,7 +28,7 @@ namespace OSPRay.TestSuite.Render
         private RendererType rendererType = RendererType.SciVis;
         private int samplesPerPixel = 1;
         private int aoSamples = 1;
-        private OSPPixelFilter pixelFilter = OSPPixelFilter.Gaussian;
+        private OSPPixelFilter pixelFilter = OSPPixelFilter.Box;
 
         private float fovInDegree = 60;
         private float focusDistance = 1f;
@@ -183,6 +183,7 @@ namespace OSPRay.TestSuite.Render
                 var renderer = renderContext.Renderer;
                 if (renderer != null)
                 {
+                    renderer.SetParam("maxContribution", 10f);
                     renderer.SetBackgroundColor(new Vector4(0f, 0f, 0f, 1f));
                     renderer.SetSamplesPerPixel(samplesPerPixel);
                     renderer.SetPixelFilter(pixelFilter);
