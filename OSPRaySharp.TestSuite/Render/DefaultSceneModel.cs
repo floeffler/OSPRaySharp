@@ -48,15 +48,6 @@ namespace OSPRay.TestSuite.Render
             // triangle faces
             var indices = new int[] { 0, 1, 2, 1, 2, 3 };
 
-
-            var camera = new OSPPerspectiveCamera();
-            camera.SetPosition(camPos);
-            camera.SetUp(camUp);
-            camera.SetDirection(camView);
-            camera.SetAspect(renderContext.AspectRatio);
-            camera.Commit();
-            renderContext.Camera = camera;
-
             var mesh = new OSPMeshGeometry();
             mesh.SetVertexPositions(vertices);
             mesh.SetVertexColors(colors);
@@ -84,13 +75,6 @@ namespace OSPRay.TestSuite.Render
             world.Commit();
             renderContext.World = world;
 
-            var renderer = new OSPSciVisRenderer();
-            renderer.SetPixelFilter(OSPPixelFilter.Mitchell);
-            renderer.SetBackgroundColor(new Vector4(0f, 0f, 0f, 1f));
-            renderer.SetAOSamples(1);
-            renderer.SetSamplesPerPixel(4);
-            renderer.Commit();
-            renderContext.Renderer = renderer;
         }
 
         protected override void UpdateCore(RenderContext renderContext, int stateChanges)

@@ -174,11 +174,8 @@ namespace OSPRay.TestSuite.Render
                         break;
                 }
 
-                renderer.Commit();
-                renderer.SetSamplesPerPixel(samplesPerPixel);
-                renderer.Commit();
                 renderContext.Renderer = renderer;
-                stateChanges &= ~RENDERER_PARAM_BIT;
+                stateChanges = stateChanges | RENDERER_PARAM_BIT; // update all params
             }
 
             if ((stateChanges & RENDERER_PARAM_BIT) == RENDERER_PARAM_BIT)
@@ -186,6 +183,7 @@ namespace OSPRay.TestSuite.Render
                 var renderer = renderContext.Renderer;
                 if (renderer != null)
                 {
+                    renderer.SetBackgroundColor(new Vector4(0f, 0f, 0f, 1f));
                     renderer.SetSamplesPerPixel(samplesPerPixel);
                     renderer.SetPixelFilter(pixelFilter);
                     if (renderer is OSPSciVisRenderer scivis)
@@ -213,8 +211,10 @@ namespace OSPRay.TestSuite.Render
                 var camera = renderContext.Camera;
                 if (camera != null)
                 {
-                    var transform = new AffineSpace3F(cameraPose.ToMatrix4x4());
-                    camera.SetTransform(transform);
+                    var frame = cameraPose.ToFrame();
+                    camera.SetPosition(frame.Position);
+                    camera.SetDirection(-frame.Front);
+                    camera.SetUp(frame.Up);
                     camera.Commit();
                 }
             }

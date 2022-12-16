@@ -32,10 +32,14 @@ namespace OSPRay.TestSuite
         private int filterIndex = 0;
         private int samplesPerPixelIndex = 0;
         private int aoSamplesIndex = 0;
-        private Pose cameraPose;
-
+        private Pose cameraPose = HomePose;
+        
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public RenderControlModel()
+        {
+            Interactor = new TransformInteractor(this);
+        }
 
         public WriteableBitmap? Content
         {
@@ -127,15 +131,21 @@ namespace OSPRay.TestSuite
             }
         }
 
+        public TransformInteractor Interactor
+        {
+            get;
+        }
+
+
         public void RefreshCommand() => Renderer?.Refresh();
 
-        public void HomeViewCommand() => CameraPose = HomePose;
+        public void HomeViewCommand() => AnimateCameraTo(HomePose, Interactor.Reset);
 
-        public void FrontViewCommand() => CameraPose = FrontPose;
+        public void FrontViewCommand() => AnimateCameraTo(FrontPose, Interactor.Reset);
 
-        public void TopViewCommand() => CameraPose = TopPose;
+        public void TopViewCommand() => AnimateCameraTo(TopPose, Interactor.Reset);
 
-        public void LeftViewCommand() => CameraPose = LeftPose;
+        public void LeftViewCommand() => AnimateCameraTo(LeftPose, Interactor.Reset);
 
         private void NotifyPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -158,6 +168,7 @@ namespace OSPRay.TestSuite
             });
         }
 
+      
         private double easeInOutCubic(double x)
         {
             return x < 0.5 ? 4 * x * x * x : 1 - Math.Pow(-2 * x + 2, 3) / 2;
@@ -167,8 +178,6 @@ namespace OSPRay.TestSuite
     public partial class RenderControl : UserControl
     {
         private RenderControlModel model = new RenderControlModel();
-        private TransformInteractor interactor;
-
         private int updateImage = 0;
 
         public RenderControl()
@@ -176,7 +185,95 @@ namespace OSPRay.TestSuite
             InitializeComponent();
             DataContext = model;
             image.EffectiveViewportChanged += OnImageEffectiveViewportChanged;
-            interactor = new TransformInteractor(model);
+        
+            image.PointerPressed += OnImagePointerPressed;
+            image.PointerReleased += OnImagePointerReleased;
+            image.PointerMoved += OnImagePointerMoved;
+            image.PointerWheelChanged += OnImagePointerWheelChanged;
+        }
+
+        private void OnImagePointerMoved(object? sender, PointerEventArgs e)
+        {
+
+            var currentPoint = e.GetCurrentPoint(this);
+            if (currentPoint != null)
+            {
+                var p = currentPoint.Position;
+                MouseEvent evt = new MouseEvent()
+                {
+                    X = (float)p.X,
+                    Y = (float)p.Y,
+                    EventType = MouseEventType.Move,
+                };
+
+                model.Interactor.InjectMouseEvent(evt);
+            }
+        }
+
+        private void OnImagePointerWheelChanged(object? sender, PointerWheelEventArgs e)
+        {
+            var currentPoint = e.GetCurrentPoint(this);
+            if (currentPoint != null)
+            {
+                var p = currentPoint.Position;
+                MouseEvent evt = new MouseEvent()
+                {
+                    X = (float)p.X,
+                    Y = (float)p.Y,
+                    EventType = MouseEventType.Wheel,
+                    Delta = (float)e.Delta.Y
+                };
+
+                model.Interactor.InjectMouseEvent(evt);
+            }
+        }
+
+        private void OnImagePointerReleased(object? sender, PointerReleasedEventArgs e)
+        {
+            var currentPoint = e.GetCurrentPoint(this);
+            if (currentPoint != null && currentPoint.Properties.IsLeftButtonPressed == false)
+            {
+                var p = currentPoint.Position;
+                MouseEvent evt = new MouseEvent()
+                {
+                    X = (float)p.X,
+                    Y = (float)p.Y,
+                    EventType = MouseEventType.Up,
+                };
+
+                model.Interactor.InjectMouseEvent(evt);
+            }
+        }
+
+        private void OnImagePointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            var currentPoint = e.GetCurrentPoint(this);
+
+            if (currentPoint != null && currentPoint.Properties.IsLeftButtonPressed == true)
+            {
+                var p = currentPoint.Position;
+                MouseEvent evt = new MouseEvent()
+                {
+                    X = (float)p.X,
+                    Y = (float)p.Y,
+                    EventType = MouseEventType.Down,
+                };
+
+                model.Interactor.InjectMouseEvent(evt);
+            }
+
+            if (currentPoint != null && currentPoint.Properties.IsRightButtonPressed == true)
+            {
+                var p = currentPoint.Position;
+                MouseEvent evt = new MouseEvent()
+                {
+                    X = (float)p.X,
+                    Y = (float)p.Y,
+                    EventType = MouseEventType.DblClick,
+                };
+
+                model.Interactor.InjectMouseEvent(evt);
+            }
         }
 
         private void OnImageEffectiveViewportChanged(object? sender, Avalonia.Layout.EffectiveViewportChangedEventArgs e)
@@ -200,95 +297,6 @@ namespace OSPRay.TestSuite
                 // prepare data on a background task
                 Interlocked.Increment(ref updateImage);
                 Dispatcher.UIThread.InvokeAsync(() => UpdateImageContent(width, height, frameData), DispatcherPriority.Normal);
-            }
-        }
-        protected override void OnPointerPressed(PointerPressedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            var currentPoint = e.GetCurrentPoint(this);
-
-            if (currentPoint != null && currentPoint.Properties.IsLeftButtonPressed == true)
-            {
-                var p = currentPoint.Position;
-                MouseEvent evt = new MouseEvent()
-                {
-                    X = (float)p.X,
-                    Y = (float)p.Y,
-                    EventType = MouseEventType.Down,
-                };
-
-                interactor.InjectMouseEvent(evt);
-            }
-
-            if (currentPoint != null && currentPoint.Properties.IsRightButtonPressed == true)
-            {
-                var p = currentPoint.Position;
-                MouseEvent evt = new MouseEvent()
-                {
-                    X = (float)p.X,
-                    Y = (float)p.Y,
-                    EventType = MouseEventType.DblClick,
-                };
-
-                interactor.InjectMouseEvent(evt);
-            }
-        }
-
-        protected override void OnPointerReleased(PointerReleasedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-
-            var currentPoint = e.GetCurrentPoint(this);
-            if (currentPoint != null && currentPoint.Properties.IsLeftButtonPressed == false)
-            {
-                var p = currentPoint.Position;
-                MouseEvent evt = new MouseEvent()
-                {
-                    X = (float)p.X,
-                    Y = (float)p.Y,
-                    EventType = MouseEventType.Up,
-                };
-
-                interactor.InjectMouseEvent(evt);
-            }
-        }
-
-        protected override void OnPointerMoved(PointerEventArgs e)
-        {
-            base.OnPointerMoved(e);
-
-            var currentPoint = e.GetCurrentPoint(this);
-            if (currentPoint != null)
-            {
-                var p = currentPoint.Position;
-                MouseEvent evt = new MouseEvent()
-                {
-                    X = (float)p.X,
-                    Y = (float)p.Y,
-                    EventType = MouseEventType.Move,
-                };
-
-                interactor.InjectMouseEvent(evt);
-            }
-        }
-
-        protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
-        {
-            base.OnPointerWheelChanged(e);
-
-            var currentPoint = e.GetCurrentPoint(this);
-            if (currentPoint != null)
-            {
-                var p = currentPoint.Position;
-                MouseEvent evt = new MouseEvent()
-                {
-                    X = (float)p.X,
-                    Y = (float)p.Y,
-                    EventType = MouseEventType.Wheel,
-                    Delta = (float)e.Delta.Y
-                };
-
-                interactor.InjectMouseEvent(evt);
             }
         }
 
