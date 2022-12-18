@@ -184,6 +184,8 @@ namespace OSPRay
             if (typeof(T) == typeof(AffineSpace3F))
                 return OSPDataType.Affine3F;
 
+            if (typeof(T) == typeof(OSPBounds))
+                return OSPDataType.Box3F;
             
 
             if (typeof(T) == typeof(OSPData<>))

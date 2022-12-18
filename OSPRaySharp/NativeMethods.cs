@@ -75,6 +75,8 @@ namespace OSPRay
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         internal static extern void ospRemoveParam(OSPObjectHandle handle, string id);
 
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern OSPBounds ospGetBounds(OSPObjectHandle handle);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern OSPFrameBufferHandle ospNewFrameBuffer(int size_x, int size_y, OSPFrameBufferFormat format, [MarshalAs(UnmanagedType.U4)] OSPFrameBufferChannel channels);

@@ -15,6 +15,6 @@ namespace OSPRay.Geometries
         {
         }
 
-        // TODO: add properties
+        public void SetBox(params OSPBounds[] boxes) => SetArrayParam("box", boxes);
     }
 }

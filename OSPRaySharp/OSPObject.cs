@@ -47,6 +47,16 @@ namespace OSPRay
             OSPDevice.CheckLastDeviceError();
         }
 
+        public OSPBounds Bounds
+        {
+            get
+            {
+                var bounds = NativeMethods.ospGetBounds(Handle);
+                OSPDevice.CheckLastDeviceError();
+                return bounds;
+            }
+        }
+
         /// <summary>
         /// Sets a string parameter
         /// </summary>

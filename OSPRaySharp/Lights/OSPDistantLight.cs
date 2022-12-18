@@ -11,9 +11,9 @@ namespace OSPRay.Lights
     /// The distant light (or traditionally the directional light) is thought to be far away (outside of the scene), 
     /// thus its light arrives (almost) as parallel rays.
     /// </summary>
-    public class OSPDistanceLight : OSPLight
+    public class OSPDistantLight : OSPLight
     {
-        public OSPDistanceLight() : base("distance")
+        public OSPDistantLight() : base("distant")
         {
         }
 
