@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace OSPRay.TestSuite.Scenes
 {
-    public partial class SimpleSceneView : UserControl
+    public partial class BoxesSceneView : UserControl
     {
-        public SimpleSceneView()
+        public BoxesSceneView()
         {
             InitializeComponent();
         }

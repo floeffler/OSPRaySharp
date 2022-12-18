@@ -1,4 +1,5 @@
 ﻿using OSPRay.TestSuite.Render;
+using OSPRay.TestSuite.Scenes.RenderModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace OSPRay.TestSuite.Scenes
 {
-    internal class SimpleSceneViewModel : SceneViewModel
+    internal class CornellBoxViewModel : SceneViewModel
     {
-        private SimpleSceneRenderModel renderModel;
+        private CornellBox renderModel;
 
-        public SimpleSceneViewModel() : base("Simple Scene")
+        public CornellBoxViewModel() : base("Cornell Box")
         {
-            renderModel = new SimpleSceneRenderModel();
+            renderModel = new CornellBox();
         }
 
         public override RenderModel RenderModel => renderModel;

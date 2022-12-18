@@ -17,8 +17,10 @@ namespace OSPRay.TestSuite
         public MainWindowViewModel()
         {
             Scenes = new SceneViewModel[] { 
-                new SimpleSceneViewModel(),
-                new SphereSceneViewModel() };
+                new BoxesSceneViewModel(),
+                new SphereSceneViewModel(),
+                new CornellBoxViewModel()
+            };
         }
 
         public int SceneIndex

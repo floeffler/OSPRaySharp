@@ -28,4 +28,9 @@
   <ItemGroup>
     <ProjectReference Include="..\OSPRaySharp\OSPRaySharp.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Scenes\BoxesSceneView.axaml.cs">
+      <DependentUpon>BoxesSceneView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
