@@ -111,7 +111,7 @@ namespace OSPRay.TestSuite.Interaction
         {
             if (keys.Data == 0)
             {
-                ApplyMouseDeltaRotate(dx, -dy, keys);
+                ApplyMouseDeltaRotate(dx, dy, keys);
             }
             else if (keys[KEY_SHIFT])
             {

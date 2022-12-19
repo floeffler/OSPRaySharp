@@ -198,7 +198,7 @@ namespace OSPRay.TestSuite.Render
             if (world != null && frameBuffer != null && renderer != null && camera != null)
             {
                 float screenX = x / frameBuffer.Width;
-                float screenY = y / frameBuffer.Height;
+                float screenY = 1f - y / frameBuffer.Height;
 
                 using (var pickResult = renderer.Pick(frameBuffer, camera, world, screenX, screenY))
                 {

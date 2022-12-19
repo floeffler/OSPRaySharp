@@ -19,10 +19,10 @@ namespace OSPRay.TestSuite
 {
     internal class RenderControlModel : INotifyPropertyChanged, ICameraPoseProvider
     {
-        private static readonly Pose HomePose = new Pose(new Vector3(0.5f, 1f, 1.5f), Vector3.Zero, Vector3.UnitY);
-        private static readonly Pose FrontPose = new Pose(new Vector3(0f, 0f, 2f), Vector3.Zero, Vector3.UnitY);
-        private static readonly Pose TopPose = new Pose(new Vector3(0f, 2f, 0f), Vector3.Zero, Vector3.UnitZ);
-        private static readonly Pose LeftPose = new Pose(new Vector3(2f, 0f, 0f), Vector3.Zero, Vector3.UnitY);
+        private static readonly Pose HomePose = new Pose(new Vector3(0.5f, 2f, -3f), Vector3.Zero, Vector3.UnitY);
+        private static readonly Pose FrontPose = new Pose(new Vector3(0f, 0f, -3f), Vector3.Zero, Vector3.UnitY);
+        private static readonly Pose TopPose = new Pose(new Vector3(0f, 3f, 0f), Vector3.Zero, Vector3.UnitZ);
+        private static readonly Pose LeftPose = new Pose(new Vector3(3f, 0f, 0f), Vector3.Zero, Vector3.UnitY);
 
 
 
@@ -559,7 +559,7 @@ namespace OSPRay.TestSuite
                 {
                     for (int i = 0; i < h; ++i)
                     {
-                        int rowIndex = i * w * 4;
+                        int rowIndex = (h - i - 1) * w * 4;
                         var dstAddress = contentBuffer.Address + (contentBuffer.RowBytes * i);
                         Marshal.Copy(data, rowIndex, dstAddress, w * 4);
                     }
