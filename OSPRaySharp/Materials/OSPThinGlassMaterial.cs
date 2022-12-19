@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,5 +17,10 @@ namespace OSPRay.Materials
         public OSPThinGlassMaterial() : base("thinGlass")
         {
         }
+
+        public void SetEta(float eta) => SetParam("eta", eta);
+        public void SetAttenuationColor(Vector3 attenuationColor) => SetParam("attenuationColor", attenuationColor);
+        public void SetAttenuationDistance(float attenuationDistance) => SetParam("attenuationDistance", attenuationDistance);
+        public void SetThickness(float thickness) => SetParam("thickness", thickness);
     }
 }
