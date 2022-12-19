@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls.Shapes;
+﻿using Avalonia;
+using Avalonia.Controls.Shapes;
 using OSPRay;
 using System;
 using System.Collections.Concurrent;
@@ -13,14 +14,17 @@ namespace OSPRay.TestSuite.Render
 {
     public class FrameCompletedEventArgs : EventArgs
     {
-        public FrameCompletedEventArgs(OSPFrameBuffer frameBuffer, long timeInMilliseconds)
+        public FrameCompletedEventArgs(int width, int height, byte[] pixels, long timeInMilliseconds)
         {
-            FrameBuffer = frameBuffer;
+            Width = width;
+            Height = height;
+            Pixels = pixels;
             TimeInMilliseconds = timeInMilliseconds;
         }
 
-        public OSPFrameBuffer FrameBuffer { get; }
-
+        public int Width { get; }
+        public int Height { get; }
+        public byte[] Pixels { get; }
         public long TimeInMilliseconds { get; }
     }
 
@@ -174,7 +178,15 @@ namespace OSPRay.TestSuite.Render
                             var timeInMilliseconds = watch.ElapsedMilliseconds;
 
                             if (renderContext.FrameBuffer != null)
-                                FrameCompletedHandler?.Invoke(new FrameCompletedEventArgs(renderContext.FrameBuffer, timeInMilliseconds));
+                            {
+                                var pixels = renderContext.ResolveFrameBuffer(renderContext.FrameBuffer, true);
+                                FrameCompletedHandler?.Invoke(new FrameCompletedEventArgs(
+                                    renderContext.FrameBuffer.Width,
+                                    renderContext.FrameBuffer.Height,
+                                    pixels,
+                                    timeInMilliseconds));
+                            }
+                                
                         }
                         catch(Exception ex)
                         {

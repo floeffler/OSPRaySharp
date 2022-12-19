@@ -373,14 +373,9 @@ namespace OSPRay.TestSuite
         {
             if (updateImage == 0)
             {
-                int width = e.FrameBuffer.Width;
-                int height = e.FrameBuffer.Height;
-                byte[] frameData;
-                using (var mappedData = e.FrameBuffer.Map())
-                {
-                    frameData = mappedData.GetSpan<byte>().ToArray();
-                }
-
+                int width = e.Width;
+                int height = e.Height;
+                byte[] frameData = e.Pixels;
 
                 // prepare data on a background task
                 Interlocked.Increment(ref updateImage);

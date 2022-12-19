@@ -17,6 +17,10 @@ namespace OSPRay.TestSuite.Render
         private OSPWorld? world = null;
         private RenderModel? model = null;
 
+        private OSPImageOperation? toneMapper = null;
+        private OSPImageOperation? denoiser = null;
+
+
         public RenderContext() 
         {
         }
@@ -126,8 +130,10 @@ namespace OSPRay.TestSuite.Render
                 frameBuffer?.Dispose();
                 if (width > 0 && height > 0)
                 {
-                    frameBuffer = new OSPFrameBuffer(width, height);
+                    frameBuffer = new OSPFrameBuffer(width, height, OSPFrameBufferFormat.RGBA32F);
+                    SetImageOperations(frameBuffer);
                     frameBuffer.Commit();
+
 
                     if (camera is OSPPerspectiveCamera perspectiveCamera)
                     {
@@ -142,12 +148,46 @@ namespace OSPRay.TestSuite.Render
                 }
             }
         }
-
-
         /// <summary>
         /// Gets whether all required objects for rendering are available
         /// </summary>
         public bool CanRenderFrame => world != null && frameBuffer != null && renderer != null && camera != null;
+
+        public byte[] ResolveFrameBuffer(OSPFrameBuffer frameBuffer, bool convertToSRGB)
+        {
+            using (var mappedData = frameBuffer.Map())
+            {
+                if (frameBuffer.Format != OSPFrameBufferFormat.RGBA32F)
+                    return mappedData.Span.ToArray();
+
+                var pixels = mappedData.GetSpan<Vector4>().ToArray();
+                var bytes = new byte[pixels.Length * 4];
+                if (convertToSRGB)
+                {
+                    Parallel.For(0, pixels.Length, i =>
+                    {
+                        int j = i * 4;
+                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].X);
+                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].Y);
+                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].Z);
+                        bytes[j] = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
+                    });
+                }
+                else
+                {
+                    Parallel.For(0, pixels.Length, i =>
+                        {
+                        int j = i * 4;
+                        bytes[j++] = (byte)(Math.Clamp(pixels[i].X, 0, 1) * 255);
+                        bytes[j++] = (byte)(Math.Clamp(pixels[i].Y, 0, 1) * 255);
+                        bytes[j++] = (byte)(Math.Clamp(pixels[i].Z, 0, 1) * 255);
+                        bytes[j]   = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
+                    });
+                }
+
+                return bytes;
+            }
+        }
 
         /// <summary>
         /// Render the next frame
@@ -192,6 +232,21 @@ namespace OSPRay.TestSuite.Render
             world?.Dispose();
             camera?.Dispose();
             frameBuffer?.Dispose();
+        }
+
+        private void SetImageOperations(OSPFrameBuffer frameBuffer)
+        {
+            List<OSPImageOperation> imageOperations = new List<OSPImageOperation>();
+            if (denoiser != null)
+                imageOperations.Add(denoiser);
+
+            if (toneMapper != null)
+                imageOperations.Add(toneMapper);
+
+            if (imageOperations.Count > 0)
+                frameBuffer.SetImageOperations(imageOperations.ToArray());
+            else
+                frameBuffer.SetImageOperations(null);
         }
     }
 }
