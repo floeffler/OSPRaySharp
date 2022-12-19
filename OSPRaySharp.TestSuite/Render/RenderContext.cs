@@ -154,7 +154,7 @@ namespace OSPRay.TestSuite.Render
         /// </summary>
         public bool CanRenderFrame => world != null && frameBuffer != null && renderer != null && camera != null;
 
-        public byte[] ResolveFrameBuffer(OSPFrameBuffer frameBuffer, bool convertToSRGB)
+        public byte[] ResolveFrameBuffer(OSPFrameBuffer frameBuffer)
         {
             using (var mappedData = frameBuffer.Map())
             {
@@ -163,33 +163,16 @@ namespace OSPRay.TestSuite.Render
 
                 var npixels = frameBuffer.Width * frameBuffer.Height;
                 var bytes = new byte[npixels * 4];
-                if (convertToSRGB)
+                Parallel.For(0, npixels, i =>
                 {
-                    Parallel.For(0, npixels, i =>
-                    {
-                        var pixels = mappedData.GetSpan<Vector4>();
+                    var pixels = mappedData.GetSpan<Vector4>();
 
-                        int j = i * 4;
-                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].X);
-                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].Y);
-                        bytes[j++] = PixelHelper.ToSRGB(pixels[i].Z);
-                        bytes[j] = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
-                    });
-                }
-                else
-                {
-                    Parallel.For(0, npixels, i =>
-                    {
-                        var pixels = mappedData.GetSpan<Vector4>();
-
-                        int j = i * 4;
-                        bytes[j++] = (byte)(Math.Clamp(pixels[i].X, 0, 1) * 255);
-                        bytes[j++] = (byte)(Math.Clamp(pixels[i].Y, 0, 1) * 255);
-                        bytes[j++] = (byte)(Math.Clamp(pixels[i].Z, 0, 1) * 255);
-                        bytes[j] = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
-                    });
-                }
-
+                    int j = i * 4;
+                    bytes[j++] = PixelHelper.ToSRGB(pixels[i].X);
+                    bytes[j++] = PixelHelper.ToSRGB(pixels[i].Y);
+                    bytes[j++] = PixelHelper.ToSRGB(pixels[i].Z);
+                    bytes[j] = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
+                });
                 return bytes;
             }
         }

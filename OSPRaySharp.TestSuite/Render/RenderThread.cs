@@ -179,7 +179,7 @@ namespace OSPRay.TestSuite.Render
 
                             if (renderContext.FrameBuffer != null)
                             {
-                                var pixels = renderContext.ResolveFrameBuffer(renderContext.FrameBuffer, true);
+                                var pixels = renderContext.ResolveFrameBuffer(renderContext.FrameBuffer);
                                 FrameCompletedHandler?.Invoke(new FrameCompletedEventArgs(
                                     renderContext.FrameBuffer.Width,
                                     renderContext.FrameBuffer.Height,
