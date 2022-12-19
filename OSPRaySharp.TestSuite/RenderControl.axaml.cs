@@ -37,7 +37,9 @@ namespace OSPRay.TestSuite
 
         private float lensRadius = 0f;
         private float focusDistance = 1f;
-
+        private bool denoiser = false;
+        private bool toneMapper = false;
+        private ToneMapperParams toneMapperParams = ToneMapperParams.Default;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -64,6 +66,7 @@ namespace OSPRay.TestSuite
                 renderer = value;
                 renderer?.SetRenderModel(renderModel);
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(DenoisingSupported));
             }
         }
 
@@ -129,6 +132,8 @@ namespace OSPRay.TestSuite
                 {
                     rendererIndex = value;
                     renderer?.SetRenderer((RendererType)rendererIndex);
+                    renderer?.SetDenoisingEnabled(denoiser);
+                    renderer?.SetToneMapper(toneMapper ? toneMapperParams : null);
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(IsPathTracer));
                 }
@@ -184,6 +189,145 @@ namespace OSPRay.TestSuite
             }
         }
 
+        public bool Denoiser
+        {
+            get => denoiser;
+            set
+            {
+                if (denoiser != value)
+                {
+                    denoiser = value;
+                    renderer?.SetDenoisingEnabled(denoiser);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool ToneMapper
+        {
+            get => toneMapper;
+            set
+            {
+                if (toneMapper != value)
+                {
+                    toneMapper = value;
+                    renderer?.SetToneMapper(toneMapper ? toneMapperParams : null);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Exposure
+        {
+            get => (int)(toneMapperParams.Exposure * 100);
+            set
+            {
+                if (Exposure != value)
+                {
+                    toneMapperParams.Exposure = value / 100f;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int HdrMax
+        {
+            get => (int)(toneMapperParams.HdrMax * 100);
+            set
+            {
+                if (HdrMax != value)
+                {
+                    toneMapperParams.HdrMax = value / 100f;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Contrast
+        {
+            get => (int)(toneMapperParams.Contrast * 100);
+            set
+            {
+                if (Contrast != value)
+                {
+                    toneMapperParams.Contrast = (value / 100f);
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Shoulder
+        {
+            get => (int)(toneMapperParams.Shoulder * 1000);
+            set
+            {
+                if (Shoulder != value)
+                {
+                    toneMapperParams.Shoulder = value / 1000f;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int MidIn
+        {
+            get => (int)(toneMapperParams.MidIn * 100);
+            set
+            {
+                if (MidIn != value)
+                {
+                    toneMapperParams.MidIn = value / 100f;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int MidOut
+        {
+            get => (int)(toneMapperParams.MidOut * 100);
+            set
+            {
+                if (MidOut != value)
+                {
+                    toneMapperParams.MidOut = value / 100f;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool AcesColor
+        {
+            get => toneMapperParams.AcesColor;
+            set
+            {
+                if (AcesColor != value)
+                {
+                    toneMapperParams.AcesColor = value;
+                    if (toneMapper)
+                        renderer?.SetToneMapper(toneMapperParams);
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
+        public bool DenoisingSupported
+        {
+            get => renderer?.DenoisingSupported ?? false;
+        }
+
         public int FocusDistanceSlider
         {
             get => (int)(focusDistance * 100);
@@ -222,6 +366,19 @@ namespace OSPRay.TestSuite
         public void TopViewCommand() => AnimateCameraTo(TopPose, Interactor.Reset);
 
         public void LeftViewCommand() => AnimateCameraTo(LeftPose, Interactor.Reset);
+
+        public void ResetToneMapperCommand()
+        {
+            toneMapperParams = ToneMapperParams.Default;
+            renderer?.SetToneMapper(toneMapper ? toneMapperParams : null);
+            NotifyPropertyChanged(nameof(Exposure));
+            NotifyPropertyChanged(nameof(Contrast));
+            NotifyPropertyChanged(nameof(HdrMax));
+            NotifyPropertyChanged(nameof(Shoulder));
+            NotifyPropertyChanged(nameof(MidIn));
+            NotifyPropertyChanged(nameof(MidOut));
+            NotifyPropertyChanged(nameof(AcesColor));
+        }
 
         public Vector3? GetSceneCoordinate(float x, float y) => renderer?.Pick(x, y);
 

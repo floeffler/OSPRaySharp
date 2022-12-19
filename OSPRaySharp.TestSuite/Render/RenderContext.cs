@@ -1,5 +1,6 @@
 ﻿using OSPRay;
 using OSPRay.Cameras;
+using OSPRay.ImageOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace OSPRay.TestSuite.Render
         private OSPWorld? world = null;
         private RenderModel? model = null;
 
-        private OSPImageOperation? toneMapper = null;
-        private OSPImageOperation? denoiser = null;
+        private OSPToneMapper? toneMapper = null;
+        private OSPDenoiser? denoiser = null;
 
 
-        public RenderContext() 
+        public RenderContext()
         {
         }
 
@@ -160,12 +161,14 @@ namespace OSPRay.TestSuite.Render
                 if (frameBuffer.Format != OSPFrameBufferFormat.RGBA32F)
                     return mappedData.Span.ToArray();
 
-                var pixels = mappedData.GetSpan<Vector4>().ToArray();
-                var bytes = new byte[pixels.Length * 4];
+                var npixels = frameBuffer.Width * frameBuffer.Height;
+                var bytes = new byte[npixels * 4];
                 if (convertToSRGB)
                 {
-                    Parallel.For(0, pixels.Length, i =>
+                    Parallel.For(0, npixels, i =>
                     {
+                        var pixels = mappedData.GetSpan<Vector4>();
+
                         int j = i * 4;
                         bytes[j++] = PixelHelper.ToSRGB(pixels[i].X);
                         bytes[j++] = PixelHelper.ToSRGB(pixels[i].Y);
@@ -175,13 +178,15 @@ namespace OSPRay.TestSuite.Render
                 }
                 else
                 {
-                    Parallel.For(0, pixels.Length, i =>
-                        {
+                    Parallel.For(0, npixels, i =>
+                    {
+                        var pixels = mappedData.GetSpan<Vector4>();
+
                         int j = i * 4;
                         bytes[j++] = (byte)(Math.Clamp(pixels[i].X, 0, 1) * 255);
                         bytes[j++] = (byte)(Math.Clamp(pixels[i].Y, 0, 1) * 255);
                         bytes[j++] = (byte)(Math.Clamp(pixels[i].Z, 0, 1) * 255);
-                        bytes[j]   = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
+                        bytes[j] = (byte)(Math.Clamp(pixels[i].W, 0, 1) * 255);
                     });
                 }
 
@@ -226,8 +231,63 @@ namespace OSPRay.TestSuite.Render
         /// </summary>
         public void ResetAccumulation() => FrameIndex = 0;
 
+
+        public void SetDenoiser(bool enabled)
+        {
+            if (enabled)
+            {
+                if (denoiser != null)
+                    return;
+
+                denoiser = new OSPDenoiser();
+            }
+            else
+            {
+                denoiser?.Dispose();
+                denoiser = null;
+            }
+
+            if (frameBuffer != null)
+            {
+                SetImageOperations(frameBuffer);
+                frameBuffer.Commit();
+            }
+        }
+
+        public void SetToneMapper(ToneMapperParams? parameters)
+        {
+            if (parameters.HasValue)
+            {
+                if (toneMapper == null)
+                    toneMapper = new OSPToneMapper();
+
+                toneMapper.SetExposure(parameters.Value.Exposure);
+                toneMapper.SetContrast(parameters.Value.Contrast);
+                toneMapper.SetShoulder(parameters.Value.Shoulder);
+                toneMapper.SetMidIn(parameters.Value.MidIn);
+                toneMapper.SetMidOut(parameters.Value.MidOut);
+                toneMapper.SetHdrMax(parameters.Value.HdrMax);
+                toneMapper.SetAcesColor(parameters.Value.AcesColor);
+                toneMapper.Commit();
+            }
+            else
+            {
+                toneMapper?.Dispose();
+                toneMapper = null;
+            }
+
+            if (frameBuffer != null)
+            {
+                SetImageOperations(frameBuffer);
+                frameBuffer.Commit();
+            }
+        }
+
+
         public void Dispose()
         {
+            denoiser?.Dispose();
+            toneMapper?.Dispose();
             renderer?.Dispose();
             world?.Dispose();
             camera?.Dispose();

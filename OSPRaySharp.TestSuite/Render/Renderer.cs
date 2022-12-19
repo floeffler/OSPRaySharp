@@ -51,6 +51,11 @@ namespace OSPRay.TestSuite.Render
 
         public bool DenoisingSupported { get; }
 
+        public void SetDenoisingEnabled(bool denoising) => InvokeAsync(x => x.SetDenoiser(denoising));
+       
+        public void SetToneMapper(ToneMapperParams? parameters) => InvokeAsync(x => x.SetToneMapper(parameters));
+
+
         public void SetInteractive(bool interactive)
         {
             renderThread.InteractiveMode = interactive;
