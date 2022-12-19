@@ -32,5 +32,8 @@
     <Compile Update="Scenes\BoxesSceneView.axaml.cs">
       <DependentUpon>BoxesSceneView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Scenes\RandomSpheresView.axaml.cs">
+      <DependentUpon>RandomSpheresView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

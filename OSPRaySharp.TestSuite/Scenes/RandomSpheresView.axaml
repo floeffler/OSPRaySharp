@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OSPRay.TestSuite.Scenes.RandomSpheresView">
+
+	<Grid ColumnDefinitions="* 40" RowDefinitions="auto auto auto" VerticalAlignment="Center">
+		<TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">Number of Spheres:</TextBlock>
+		<Slider Grid.Column="0" Grid.Row="1" Minimum="20" Maximum="200" Value="{Binding NumSpheres}"/>
+		<TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding NumSpheres}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<CheckBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" IsChecked="{Binding ShowGroundPlane}" Content="Show ground plane"/>
+	</Grid>
+	
+</UserControl>

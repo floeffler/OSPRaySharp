@@ -18,7 +18,7 @@ namespace OSPRay.TestSuite
         {
             Scenes = new SceneViewModel[] { 
                 new BoxesSceneViewModel(),
-                new SphereSceneViewModel(),
+                new RandomSpheresViewModel(),
                 new CornellBoxViewModel()
             };
         }

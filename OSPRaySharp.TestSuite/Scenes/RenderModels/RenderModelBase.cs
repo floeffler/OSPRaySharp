@@ -16,6 +16,7 @@ namespace OSPRay.TestSuite.Scenes.RenderModels
     internal abstract class RenderModelBase : RenderModel
     {
         private bool showGroundPlane = false;
+        private int randomSeed = 16480;
 
         public RenderModelBase(): base()
         {
@@ -28,10 +29,26 @@ namespace OSPRay.TestSuite.Scenes.RenderModels
             {
                 if (showGroundPlane != value)
                 {
+                    showGroundPlane = value;
                     NotifyChangedAll();
                 }
             }
         }
+
+
+        public int RandomSeed
+        {
+            get => randomSeed;
+            set
+            {
+                if (randomSeed != value)
+                {
+                    randomSeed= value;
+                    NotifyChangedAll();
+                }
+            }
+        }
+
 
         internal override void Setup(RenderContext renderContext)
         {
