@@ -40,6 +40,7 @@ namespace OSPRay.TestSuite
         private bool denoiser = false;
         private bool toneMapper = false;
         private ToneMapperParams toneMapperParams = ToneMapperParams.Default;
+        private string frameTime;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -55,6 +56,19 @@ namespace OSPRay.TestSuite
             {
                 content = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public string FrameTime
+        {
+            get => frameTime;
+            set
+            {
+                if (frameTime != value)
+                {
+                    frameTime = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
@@ -533,10 +547,14 @@ namespace OSPRay.TestSuite
                 int width = e.Width;
                 int height = e.Height;
                 byte[] frameData = e.Pixels;
+                double frameTime = e.TimeInMilliseconds;
 
                 // prepare data on a background task
                 Interlocked.Increment(ref updateImage);
-                Dispatcher.UIThread.InvokeAsync(() => UpdateImageContent(width, height, frameData), DispatcherPriority.Normal);
+                Dispatcher.UIThread.InvokeAsync(() => {
+                    UpdateImageContent(width, height, frameData);
+                    model.FrameTime = $"{frameTime:0.##} ms ({1000.0 / frameTime:0.##} fps)";
+                }, DispatcherPriority.Normal);
             }
         }
 

@@ -14,7 +14,7 @@ namespace OSPRay.TestSuite.Render
 {
     public class FrameCompletedEventArgs : EventArgs
     {
-        public FrameCompletedEventArgs(int width, int height, byte[] pixels, long timeInMilliseconds)
+        public FrameCompletedEventArgs(int width, int height, byte[] pixels, double timeInMilliseconds)
         {
             Width = width;
             Height = height;
@@ -25,7 +25,7 @@ namespace OSPRay.TestSuite.Render
         public int Width { get; }
         public int Height { get; }
         public byte[] Pixels { get; }
-        public long TimeInMilliseconds { get; }
+        public double TimeInMilliseconds { get; }
     }
 
     public class ExceptionEventArgs : EventArgs
@@ -63,7 +63,7 @@ namespace OSPRay.TestSuite.Render
         private int alive = 0;
         private ResizeRequest? currentResizeRequest = null;
         private RenderSettings? renderSettings = null;
-
+        
         public RenderThread()
         {
         }
@@ -138,8 +138,6 @@ namespace OSPRay.TestSuite.Render
                 renderSettings = new RenderSettings();
                 renderSettings.Setup(renderContext);
 
-                var watch = Stopwatch.StartNew();
-
             
                 Interlocked.Exchange(ref alive, 1);   //mark as running
                 startEvent.Set();
@@ -173,9 +171,9 @@ namespace OSPRay.TestSuite.Render
                     {
                         try
                         {
-                            watch.Restart();
+                            
                             renderContext.RenderNextFrame();
-                            var timeInMilliseconds = watch.ElapsedMilliseconds;
+                            
 
                             if (renderContext.FrameBuffer != null)
                             {
@@ -184,7 +182,7 @@ namespace OSPRay.TestSuite.Render
                                     renderContext.FrameBuffer.Width,
                                     renderContext.FrameBuffer.Height,
                                     pixels,
-                                    timeInMilliseconds));
+                                    renderContext.AverageTimeInMilliSeconds));
                             }
                                 
                         }

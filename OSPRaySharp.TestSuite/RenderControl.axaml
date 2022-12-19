@@ -12,94 +12,97 @@
 		</StackPanel>
 
 		<Image Grid.Row="0" Name="image" Source="{Binding Content}" IsVisible="False" Stretch="UniformToFill"/>
-		<StackPanel Grid.Row="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Center">
-			<Button Content="&#x21bb;" Command="{Binding RefreshCommand}" Margin="0 0 5 0"/>
-			<Button Content="&#x2302;" Command="{Binding HomeViewCommand}"/>
-			<Button Content="&#11121;" Command="{Binding FrontViewCommand}"/>
-			<Button Content="&#11123;" Command="{Binding TopViewCommand}"/>
-			<Button Content="&#11122;" Command="{Binding LeftViewCommand}" Margin="0 0 5 0"/>
-			<DropDown SelectedIndex="{Binding FilterIndex}">
-				<DropDownItem>Point</DropDownItem>
-				<DropDownItem>Box</DropDownItem>
-				<DropDownItem>Gaussian</DropDownItem>
-				<DropDownItem>Mitchell</DropDownItem>
-				<DropDownItem>Blackman-Harris</DropDownItem>
-			</DropDown>
-			<DropDown SelectedIndex="{Binding SamplesPerPixelIndex}">
-				<DropDownItem>1 spp</DropDownItem>
-				<DropDownItem>2 spp</DropDownItem>
-				<DropDownItem>4 spp</DropDownItem>
-				<DropDownItem>8 spp</DropDownItem>
-				<DropDownItem>16 spp</DropDownItem>
-			</DropDown>
-			<DropDown SelectedIndex="{Binding AOSamplesIndex}" Margin="0 0 5 0">
-				<DropDownItem>1 aos</DropDownItem>
-				<DropDownItem>2 aos</DropDownItem>
-				<DropDownItem>4 aos</DropDownItem>
-				<DropDownItem>8 aos</DropDownItem>
-				<DropDownItem>16 aos</DropDownItem>
-				<DropDownItem>32 aos</DropDownItem>
-				<DropDownItem>64 aos</DropDownItem>
-			</DropDown>
+		<Grid ColumnDefinitions="auto *" Grid.Row="1">
+			<StackPanel Grid.Column="0" Margin="5" Orientation="Horizontal" VerticalAlignment="Center">
+				<Button Content="&#x21bb;" Command="{Binding RefreshCommand}" Margin="0 0 5 0"/>
+				<Button Content="&#x2302;" Command="{Binding HomeViewCommand}"/>
+				<Button Content="&#11121;" Command="{Binding FrontViewCommand}"/>
+				<Button Content="&#11123;" Command="{Binding TopViewCommand}"/>
+				<Button Content="&#11122;" Command="{Binding LeftViewCommand}" Margin="0 0 5 0"/>
+				<DropDown SelectedIndex="{Binding FilterIndex}">
+					<DropDownItem>Point</DropDownItem>
+					<DropDownItem>Box</DropDownItem>
+					<DropDownItem>Gaussian</DropDownItem>
+					<DropDownItem>Mitchell</DropDownItem>
+					<DropDownItem>Blackman-Harris</DropDownItem>
+				</DropDown>
+				<DropDown SelectedIndex="{Binding SamplesPerPixelIndex}">
+					<DropDownItem>1 spp</DropDownItem>
+					<DropDownItem>2 spp</DropDownItem>
+					<DropDownItem>4 spp</DropDownItem>
+					<DropDownItem>8 spp</DropDownItem>
+					<DropDownItem>16 spp</DropDownItem>
+				</DropDown>
+				<DropDown SelectedIndex="{Binding AOSamplesIndex}" Margin="0 0 5 0">
+					<DropDownItem>1 aos</DropDownItem>
+					<DropDownItem>2 aos</DropDownItem>
+					<DropDownItem>4 aos</DropDownItem>
+					<DropDownItem>8 aos</DropDownItem>
+					<DropDownItem>16 aos</DropDownItem>
+					<DropDownItem>32 aos</DropDownItem>
+					<DropDownItem>64 aos</DropDownItem>
+				</DropDown>
 
-			<DropDown SelectedIndex="{Binding RendererIndex}">
-				<DropDownItem>SciVis</DropDownItem>
-				<DropDownItem>AO</DropDownItem>
-				<DropDownItem>PathTracer</DropDownItem>
-			</DropDown>
-			<Button Content="Lens &#9881;" IsEnabled="{Binding IsPathTracer}">
-				<Button.Flyout>
-					<Flyout>
-						<StackPanel>
-							<TextBlock>Lens Radius:</TextBlock>
-							<Slider Minimum="0" Maximum="500" Width="250" Value="{Binding LensRadiusSlider}" Ticks="1"/>
-							<TextBlock Margin="0 10 0 0">Focus Distance:</TextBlock>
-							<Slider Minimum="1" Maximum="500" Width="250" Value="{Binding FocusDistanceSlider}" Ticks="1"/>
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-			</Button>
-			<Button Content="Image &#9881;" Margin="5 0 0 0">
-				<Button.Flyout>
-					<Flyout>
-						<StackPanel Margin="5" Width="350">
-							<CheckBox Content="Enable denoiser" IsChecked="{Binding Denoiser}" IsEnabled="{Binding DenoisingSupported}"/>
-							<CheckBox Content="Enable tonemapping" IsChecked="{Binding ToneMapper}"/>
-							<Grid IsEnabled="{Binding ToneMapper, Mode=OneWay}" Margin="10 0 10 0">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="80"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-									<RowDefinition Height="auto"/>
-								</Grid.RowDefinitions>
-								<TextBlock Text="Exposure:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="1" Minimum="10" Maximum="500" Value="{Binding Exposure}"/>
-								<TextBlock Text="HDR Max:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="2" Minimum="10" Maximum="2000" Value="{Binding HdrMax}"/>
-								<TextBlock Text="Contrast:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="3" Minimum="100" Maximum="200" Value="{Binding Contrast}"/>
-								<TextBlock Text="Shoulder:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="4" Minimum="900" Maximum="1000" Value="{Binding Shoulder}"/>
-								<TextBlock Text="Mid In:" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="5" Minimum="0" Maximum="100" Value="{Binding MidIn}"/>
-								<TextBlock Text="Mid Out:" Grid.Column="0" Grid.Row="6" VerticalAlignment="Center"/>
-								<Slider Grid.Column="1" Grid.Row="6" Minimum="0" Maximum="100" Value="{Binding MidOut}"/>
-								<CheckBox  Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Content="apply the ACES color transforms" IsChecked="{Binding AcesColor}"/>
-								<Button Content="Reset to defaults" Grid.Row="8" Grid.ColumnSpan="2" Command="{Binding ResetToneMapperCommand}"/>
-							</Grid>
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-			</Button>
-		</StackPanel>
+				<DropDown SelectedIndex="{Binding RendererIndex}">
+					<DropDownItem>SciVis</DropDownItem>
+					<DropDownItem>AO</DropDownItem>
+					<DropDownItem>PathTracer</DropDownItem>
+				</DropDown>
+				<Button Content="Lens &#9881;" IsEnabled="{Binding IsPathTracer}">
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel>
+								<TextBlock>Lens Radius:</TextBlock>
+								<Slider Minimum="0" Maximum="500" Width="250" Value="{Binding LensRadiusSlider}" Ticks="1"/>
+								<TextBlock Margin="0 10 0 0">Focus Distance:</TextBlock>
+								<Slider Minimum="1" Maximum="500" Width="250" Value="{Binding FocusDistanceSlider}" Ticks="1"/>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+				<Button Content="Image &#9881;" Margin="5 0 0 0">
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel Margin="5" Width="350">
+								<CheckBox Content="Enable denoiser" IsChecked="{Binding Denoiser}" IsEnabled="{Binding DenoisingSupported}"/>
+								<CheckBox Content="Enable tonemapping" IsChecked="{Binding ToneMapper}"/>
+								<Grid IsEnabled="{Binding ToneMapper, Mode=OneWay}" Margin="10 0 10 0">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="80"/>
+										<ColumnDefinition Width="*"/>
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+										<RowDefinition Height="auto"/>
+									</Grid.RowDefinitions>
+									<TextBlock Text="Exposure:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="1" Minimum="10" Maximum="500" Value="{Binding Exposure}"/>
+									<TextBlock Text="HDR Max:" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="2" Minimum="10" Maximum="2000" Value="{Binding HdrMax}"/>
+									<TextBlock Text="Contrast:" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="3" Minimum="100" Maximum="200" Value="{Binding Contrast}"/>
+									<TextBlock Text="Shoulder:" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="4" Minimum="900" Maximum="1000" Value="{Binding Shoulder}"/>
+									<TextBlock Text="Mid In:" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="5" Minimum="0" Maximum="100" Value="{Binding MidIn}"/>
+									<TextBlock Text="Mid Out:" Grid.Column="0" Grid.Row="6" VerticalAlignment="Center"/>
+									<Slider Grid.Column="1" Grid.Row="6" Minimum="0" Maximum="100" Value="{Binding MidOut}"/>
+									<CheckBox  Grid.Column="0" Grid.Row="7" Grid.ColumnSpan="2" Content="apply the ACES color transforms" IsChecked="{Binding AcesColor}"/>
+									<Button Content="Reset to defaults" Grid.Row="8" Grid.ColumnSpan="2" Command="{Binding ResetToneMapperCommand}"/>
+								</Grid>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+			</StackPanel>
+		<TextBlock Grid.Column="1" Margin="5" VerticalAlignment="Center" Text="{Binding FrameTime} ms" HorizontalAlignment="Right"/>
+		</Grid>
 	</Grid>
 </UserControl>

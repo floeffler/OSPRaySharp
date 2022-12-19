@@ -3,6 +3,7 @@ using OSPRay.Cameras;
 using OSPRay.ImageOperations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -20,11 +21,14 @@ namespace OSPRay.TestSuite.Render
 
         private OSPToneMapper? toneMapper = null;
         private OSPDenoiser? denoiser = null;
+        private Stopwatch watch = Stopwatch.StartNew();
 
 
         public RenderContext()
         {
         }
+
+        private long TotalRenderTimeInMilliSeconds { get; set; } 
 
         /// <summary>
         /// The current framebuffer aspect ratio
@@ -154,6 +158,11 @@ namespace OSPRay.TestSuite.Render
         /// </summary>
         public bool CanRenderFrame => world != null && frameBuffer != null && renderer != null && camera != null;
 
+        /// <summary>
+        /// The average time for render a frame
+        /// </summary>
+        public double AverageTimeInMilliSeconds { get; private set; }
+
         public byte[] ResolveFrameBuffer(OSPFrameBuffer frameBuffer)
         {
             using (var mappedData = frameBuffer.Map())
@@ -188,8 +197,11 @@ namespace OSPRay.TestSuite.Render
                 if (FrameIndex == 0)
                     frameBuffer.ResetAccumulation();
 
+                watch.Restart();
                 renderer.RenderFrameBlocking(frameBuffer, camera, world);
                 FrameIndex++;
+                TotalRenderTimeInMilliSeconds += watch.ElapsedMilliseconds;
+                AverageTimeInMilliSeconds = TotalRenderTimeInMilliSeconds / (double)FrameIndex;
             }
         }
 
@@ -212,7 +224,11 @@ namespace OSPRay.TestSuite.Render
         /// <summary>
         /// Reset the accumulation of the frame buffer
         /// </summary>
-        public void ResetAccumulation() => FrameIndex = 0;
+        public void ResetAccumulation()
+        {
+            FrameIndex = 0;
+            TotalRenderTimeInMilliSeconds = 0;
+        }
 
 
         public void SetDenoiser(bool enabled)
