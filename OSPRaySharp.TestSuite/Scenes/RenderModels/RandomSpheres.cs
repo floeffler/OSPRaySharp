@@ -40,20 +40,25 @@ namespace OSPRay.TestSuite.Scenes.RenderModels
             var radius = new float[count];
             var color = new Vector4[count];
 
+            var centerSampler = new UniformDistribution(-1f, 1f);
+            var radiiSampler = new UniformDistribution(0.05f, 0.15f);
+            var colorSampler = new UniformDistribution(0.5f, 1f);
+
+
             for (int i = 0; i < count; i++)
             {
                 center[i] = new Vector3(
-                    random.NextSingle() * 2f - 1f,
-                    random.NextSingle() * 2f - 1f,
-                    random.NextSingle() * 2f - 1f);
+                    centerSampler.SampleSingle(random),
+                    centerSampler.SampleSingle(random),
+                    centerSampler.SampleSingle(random));
 
-                radius[i] = random.NextSingle() * 0.1f + 0.05f;
+                radius[i] = radiiSampler.SampleSingle(random);
 
                 color[i] = new Vector4(
-                    random.NextSingle() * 0.5f + 0.5f,
-                    random.NextSingle() * 0.5f + 0.5f,
-                    random.NextSingle() * 0.5f + 0.5f,
-                    random.NextSingle() * 0.5f + 0.5f);
+                    colorSampler.SampleSingle(random),
+                    colorSampler.SampleSingle(random),
+                    colorSampler.SampleSingle(random),
+                    colorSampler.SampleSingle(random));
             }
 
 

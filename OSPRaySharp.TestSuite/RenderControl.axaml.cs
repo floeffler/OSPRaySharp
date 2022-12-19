@@ -40,7 +40,7 @@ namespace OSPRay.TestSuite
         private bool denoiser = false;
         private bool toneMapper = false;
         private ToneMapperParams toneMapperParams = ToneMapperParams.Default;
-        private string frameTime;
+        private string frameTime = "";
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
