@@ -14,7 +14,7 @@ namespace OSPRay.TransferFunctions
         }
 
         public void SetColor(Vector3[] color) => SetArrayParam("color", color);
-        public void SetOpacity(float[] opacity) => SetArrayParam("color", opacity);
+        public void SetOpacity(float[] opacity) => SetArrayParam("opacity", opacity);
         public void SetDomain(float rangeStart, float rangeEnd) => SetParam("value", OSPDataType.Box1F, rangeStart, rangeEnd);
     }
 }
