@@ -20,7 +20,8 @@ namespace OSPRay.TestSuite
                 new BoxesSceneViewModel(),
                 new RandomSpheresViewModel(),
                 new CornellBoxViewModel(),
-                new StreamlinesViewModel()
+                new StreamlinesViewModel(),
+                new StagbeetleViewModel(),
             };
         }
 
