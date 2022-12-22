@@ -4,8 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OSPRay.TestSuite.Scenes.StagbeetleView">
-	<StackPanel>
-		<Button Content="Download Stagbeetle" Command="{Binding DownloadCommand}" IsEnabled="{Binding NeedDownload}"/>
+	<StackPanel Margin="5 0 5 0">
+		<TextBlock >Threshold:</TextBlock>
+		<Slider  Minimum="0" Maximum="100" Value="{Binding Threshold}"/>
+		<TextBlock >Slope:</TextBlock>
+		<Slider Minimum="1" Maximum="100" Value="{Binding Steepness}"/>
+		<TextBlock >Max Opacity:</TextBlock>
+		<Slider Minimum="1" Maximum="100" Value="{Binding Opacity}"/>
+		<TextBlock >Density:</TextBlock>
+		<Slider  Minimum="0" Maximum="5000" Value="{Binding Density}"/>
+		<CheckBox IsChecked="{Binding UseLight}" Content="Use light" Margin="0 0 0 20"/>
+		<Button Content="Download Volume File" Command="{Binding DownloadCommand}" IsEnabled="{Binding NeedDownload}"/>
 		<ProgressBar Minimum="0" Maximum="100" Value="{Binding ProgressValue}" IsEnabled="{Binding NeedDownload}"/>
 	</StackPanel>
 </UserControl>

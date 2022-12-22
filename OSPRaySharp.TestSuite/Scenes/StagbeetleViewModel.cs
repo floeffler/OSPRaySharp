@@ -15,9 +15,110 @@ namespace OSPRay.TestSuite.Scenes
     {
         private Stagbeetle renderModel = new Stagbeetle();
         private int progressValue;
+        private int density = 100;
+        private int threshold = 10;
+        private int steepness = 10;
+        private int opacity = 100;
+
 
         public StagbeetleViewModel() : base("Stagbeetle")
         {
+        }
+
+        public int Density
+        {
+            get => density;
+            set
+            {
+                if (density != value)
+                {
+                    density = value;
+                    renderModel.Density = density / 100f;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Threshold
+        {
+            get => threshold;
+            set
+            {
+                if (threshold != value)
+                {
+                    threshold = value;
+                    UpdateOpacity();
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Steepness
+        {
+            get => steepness;
+            set
+            {
+                if (steepness != value)
+                {
+                    steepness = value;
+                    UpdateOpacity();
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int Opacity
+        {
+            get => opacity;
+            set
+            {
+                if (opacity != value)
+                {
+                    opacity = value;
+                    UpdateOpacity();
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool UseLight
+        {
+            get => renderModel.UseLight;
+            set
+            {
+                if (renderModel.UseLight != value)
+                {
+                    renderModel.UseLight = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
+        private void UpdateOpacity()
+        {
+            float p1 = threshold / 100f;
+            float p2 = p1 + (1f - p1) * (1f - steepness / 100f);
+            float o = opacity / 100f;
+
+            float range = p2 - p1;
+            float invRange = range > 0f ? 1f / range : 0f;
+
+            float[] curve = new float[256];
+            for (int i= 0; i < curve.Length; ++i)
+            {
+                float p = i / (float)(curve.Length - 1);
+                float t;
+                if (p <= p1)
+                    t = 0f;
+                else if (p >= p2)
+                    t = 1f;
+                else
+                    t = (p - p1) * invRange;
+
+                curve[i] = t * o;
+            }
+            renderModel.Opacity = curve;
         }
 
         private void DownloadCommand()
