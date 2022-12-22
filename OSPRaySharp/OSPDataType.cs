@@ -206,8 +206,14 @@ namespace OSPRay
             if (typeof(T) == typeof(OSPGeometry) || typeof(T).IsSubclassOf(typeof(OSPGeometry)))
                 return OSPDataType.Geometry;
 
+            if (typeof(T) == typeof(OSPVolume) || typeof(T).IsSubclassOf(typeof(OSPVolume)))
+                return OSPDataType.Volume;
+
             if (typeof(T) == typeof(OSPGeometricModel) || typeof(T).IsSubclassOf(typeof(OSPGeometricModel)))
                 return OSPDataType.GeometricModel;
+
+            if (typeof(T) == typeof(OSPVolumetricModel) || typeof(T).IsSubclassOf(typeof(OSPVolumetricModel)))
+                return OSPDataType.VolumetricModel;
 
             if (typeof(T) == typeof(OSPMaterial) || typeof(T).IsSubclassOf(typeof(OSPMaterial)))
                 return OSPDataType.Material;
